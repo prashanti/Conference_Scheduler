@@ -1,0 +1,129 @@
+2013-11-04 09:32:28,748 : INFO : adding document #0 to Dictionary(0 unique tokens)
+2013-11-04 09:32:28,915 : INFO : built Dictionary(4974 unique tokens) from 1242 documents (total 24545 corpus positions)
+2013-11-04 09:32:28,924 : INFO : saving Dictionary object to ./storeddictionary.dict
+2013-11-04 09:32:29,133 : INFO : storing corpus in Matrix Market format to ./storedcorpus.mm
+2013-11-04 09:32:29,133 : INFO : saving sparse matrix to ./storedcorpus.mm
+2013-11-04 09:32:29,171 : INFO : PROGRESS: saving document #0
+2013-11-04 09:32:29,336 : INFO : PROGRESS: saving document #1000
+2013-11-04 09:32:29,376 : INFO : saved 1242x1960 matrix, density=0.571% (13912/2434320)
+2013-11-04 09:32:29,376 : INFO : saving MmCorpus index to ./storedcorpus.mm.index
+2013-11-04 09:32:29,376 : INFO : loading Dictionary object from ./storeddictionary.dict
+2013-11-04 09:32:29,395 : INFO : loaded corpus index from ./storedcorpus.mm.index
+2013-11-04 09:32:29,396 : INFO : initializing corpus reader from ./storedcorpus.mm
+2013-11-04 09:32:29,396 : INFO : accepted corpus with 1242 documents, 1960 features, 13912 non-zero entries
+2013-11-04 09:32:29,396 : INFO : collecting document frequencies
+2013-11-04 09:32:29,396 : INFO : PROGRESS: processing document #0
+2013-11-04 09:32:29,444 : INFO : calculating IDF weights for 1242 documents and 1960 features (13912 matrix non-zeros)
+2013-11-04 09:32:29,520 : WARNING : scanning corpus to determine the number of features (consider setting `num_features` explicitly)
+2013-11-04 09:32:29,598 : INFO : creating matrix for 1242 documents and 1960 features
+2013-11-04 09:32:34,687 : INFO : using serial LSI version on this node
+2013-11-04 09:32:34,688 : INFO : updating model with new documents
+2013-11-04 09:32:34,767 : INFO : preparing a new chunk of documents
+2013-11-04 09:32:34,792 : INFO : using 100 extra samples and 2 power iterations
+2013-11-04 09:32:34,792 : INFO : 1st phase: constructing (1960, 105) action matrix
+2013-11-04 09:32:34,800 : INFO : orthonormalizing (1960, 105) action matrix
+2013-11-04 09:32:34,857 : INFO : 2nd phase: running dense svd on (105, 1242) matrix
+2013-11-04 09:32:34,878 : INFO : computing the final decomposition
+2013-11-04 09:32:34,878 : INFO : keeping 5 factors (discarding 86.356% of energy spectrum)
+2013-11-04 09:32:34,879 : INFO : processed documents up to #1242
+2013-11-04 09:32:34,880 : INFO : topic #0(4.392): -0.229*"adaptation" + -0.220*"evolution" + -0.198*"selection" + -0.186*"gene" + -0.183*"population" + -0.182*"speciation" + -0.162*"species" + -0.153*"genetics" + -0.153*"genetic" + -0.151*"isolation"
+2013-11-04 09:32:34,880 : INFO : topic #1(3.132): 0.348*"isolation" + 0.299*"reproductive" + 0.247*"speciation" + -0.226*"tree" + -0.206*"life" + 0.197*"sexual" + 0.195*"selection" + 0.171*"hybrid" + -0.166*"gene" + 0.165*"mating"
+2013-11-04 09:32:34,881 : INFO : topic #2(3.044): 0.345*"adaptation" + -0.262*"species" + 0.258*"plasticity" + -0.231*"isolation" + -0.202*"speciation" + 0.192*"phenotypic" + -0.177*"phylogeography" + -0.167*"reproductive" + 0.161*"drosophila" + 0.157*"local"
+2013-11-04 09:32:34,881 : INFO : topic #3(2.965): 0.312*"sexual" + 0.279*"selection" + 0.264*"evolution" + -0.256*"adaptation" + -0.237*"population" + -0.202*"genomics" + -0.157*"genetics" + -0.145*"flow" + -0.140*"local" + 0.133*"mate"
+2013-11-04 09:32:34,881 : INFO : topic #4(2.836): -0.601*"gene" + -0.261*"expression" + 0.233*"life" + 0.212*"history" + -0.194*"flow" + -0.171*"evolution" + 0.169*"population" + -0.160*"duplication" + -0.130*"transfer" + 0.127*"genetics"
+2013-11-04 09:32:34,882 : INFO : topic #0(4.392): -0.229*"adaptation" + -0.220*"evolution" + -0.198*"selection" + -0.186*"gene" + -0.183*"population" + -0.182*"speciation" + -0.162*"species" + -0.153*"genetics" + -0.153*"genetic" + -0.151*"isolation"
+2013-11-04 09:32:34,883 : INFO : topic #1(3.132): 0.348*"isolation" + 0.299*"reproductive" + 0.247*"speciation" + -0.226*"tree" + -0.206*"life" + 0.197*"sexual" + 0.195*"selection" + 0.171*"hybrid" + -0.166*"gene" + 0.165*"mating"
+2013-11-04 09:32:34,883 : INFO : topic #2(3.044): 0.345*"adaptation" + -0.262*"species" + 0.258*"plasticity" + -0.231*"isolation" + -0.202*"speciation" + 0.192*"phenotypic" + -0.177*"phylogeography" + -0.167*"reproductive" + 0.161*"drosophila" + 0.157*"local"
+2013-11-04 09:32:34,883 : INFO : topic #3(2.965): 0.312*"sexual" + 0.279*"selection" + 0.264*"evolution" + -0.256*"adaptation" + -0.237*"population" + -0.202*"genomics" + -0.157*"genetics" + -0.145*"flow" + -0.140*"local" + 0.133*"mate"
+2013-11-04 09:32:34,883 : INFO : topic #4(2.836): -0.601*"gene" + -0.261*"expression" + 0.233*"life" + 0.212*"history" + -0.194*"flow" + -0.171*"evolution" + 0.169*"population" + -0.160*"duplication" + -0.130*"transfer" + 0.127*"genetics"
+2013-11-04 09:32:34,883 : WARNING : scanning corpus to determine the number of features (consider setting `num_features` explicitly)
+2013-11-04 09:32:34,993 : INFO : creating matrix for 1242 documents and 5 features
+2013-11-04 09:32:39,740 : INFO : using serial LDA version on this node
+2013-11-04 09:32:39,741 : INFO : running online LDA training, 5 topics, 10 passes over the supplied corpus of 1242 documents, updating model once every 1242 documents
+2013-11-04 09:32:39,888 : INFO : PROGRESS: iteration 0, at document #1242/1242
+2013-11-04 09:32:41,472 : INFO : 1239/1242 documents converged within 50 iterations
+2013-11-04 09:32:41,473 : INFO : topic #0: 0.006*evolution + 0.005*species + 0.005*speciation + 0.005*selection + 0.004*diversification + 0.004*gene + 0.004*reproductive + 0.004*tree + 0.004*phylogenetic + 0.004*adaptation
+2013-11-04 09:32:41,474 : INFO : topic #1: 0.006*evolution + 0.005*gene + 0.005*selection + 0.004*model + 0.004*population + 0.003*genetic + 0.003*life + 0.003*plant + 0.003*coevolution + 0.003*insect
+2013-11-04 09:32:41,474 : INFO : topic #2: 0.007*evolution + 0.005*gene + 0.005*adaptation + 0.005*genetics + 0.004*selection + 0.004*phylogenetics + 0.004*speciation + 0.004*hybrid + 0.003*species + 0.003*hybridization
+2013-11-04 09:32:41,474 : INFO : topic #3: 0.007*evolution + 0.007*adaptation + 0.006*history + 0.005*selection + 0.005*plasticity + 0.004*species + 0.004*phenotypic + 0.004*population + 0.004*life + 0.004*genomics
+2013-11-04 09:32:41,475 : INFO : topic #4: 0.005*phylogeography + 0.005*genetic + 0.005*evolution + 0.005*species + 0.005*population + 0.004*genome + 0.004*gene + 0.004*adaptation + 0.004*speciation + 0.004*genomics
+2013-11-04 09:32:41,475 : INFO : topic diff=2.300236, rho=1.000000
+2013-11-04 09:32:41,627 : INFO : PROGRESS: iteration 1, at document #1242/1242
+2013-11-04 09:32:42,710 : INFO : 1232/1242 documents converged within 50 iterations
+2013-11-04 09:32:42,712 : INFO : topic #0: 0.006*evolution + 0.005*speciation + 0.005*species + 0.005*selection + 0.005*tree + 0.005*reproductive + 0.004*gene + 0.004*isolation + 0.004*diversification + 0.004*host
+2013-11-04 09:32:42,712 : INFO : topic #1: 0.006*gene + 0.006*evolution + 0.005*selection + 0.004*model + 0.004*plant + 0.004*coevolution + 0.004*population + 0.004*insect + 0.003*evolutionary + 0.003*genomics
+2013-11-04 09:32:42,712 : INFO : topic #2: 0.007*evolution + 0.005*gene + 0.005*adaptation + 0.005*genetics + 0.004*hybrid + 0.004*selection + 0.004*phylogenetics + 0.004*speciation + 0.004*sequencing + 0.004*mutation
+2013-11-04 09:32:42,712 : INFO : topic #3: 0.007*evolution + 0.007*adaptation + 0.006*history + 0.005*selection + 0.005*life + 0.005*plasticity + 0.004*drosophila + 0.004*phenotypic + 0.004*sexual + 0.004*species
+2013-11-04 09:32:42,713 : INFO : topic #4: 0.006*phylogeography + 0.005*genetic + 0.005*species + 0.005*evolution + 0.005*population + 0.004*genome + 0.004*genomics + 0.004*comparative + 0.004*gene + 0.004*diversification
+2013-11-04 09:32:42,713 : INFO : topic diff=0.121682, rho=0.707107
+2013-11-04 09:32:42,862 : INFO : PROGRESS: iteration 2, at document #1242/1242
+2013-11-04 09:32:43,838 : INFO : 1233/1242 documents converged within 50 iterations
+2013-11-04 09:32:43,840 : INFO : topic #0: 0.006*evolution + 0.006*speciation + 0.005*species + 0.005*tree + 0.005*selection + 0.005*reproductive + 0.004*isolation + 0.004*gene + 0.004*host + 0.004*diversification
+2013-11-04 09:32:43,840 : INFO : topic #1: 0.006*gene + 0.005*evolution + 0.005*selection + 0.004*plant + 0.004*model + 0.004*coevolution + 0.004*insect + 0.004*evolutionary + 0.004*population + 0.004*genomics
+2013-11-04 09:32:43,841 : INFO : topic #2: 0.007*evolution + 0.006*gene + 0.005*hybrid + 0.005*genetics + 0.005*adaptation + 0.004*selection + 0.004*speciation + 0.004*isolation + 0.004*phylogenetics + 0.004*sequencing
+2013-11-04 09:32:43,841 : INFO : topic #3: 0.007*evolution + 0.007*adaptation + 0.006*history + 0.006*selection + 0.005*life + 0.005*drosophila + 0.005*plasticity + 0.004*phenotypic + 0.004*sexual + 0.004*species
+2013-11-04 09:32:43,841 : INFO : topic #4: 0.006*phylogeography + 0.006*genetic + 0.005*species + 0.005*population + 0.005*evolution + 0.004*genome + 0.004*genomics + 0.004*diversification + 0.004*comparative + 0.004*diversity
+2013-11-04 09:32:43,841 : INFO : topic diff=0.082760, rho=0.577350
+2013-11-04 09:32:43,987 : INFO : PROGRESS: iteration 3, at document #1242/1242
+2013-11-04 09:32:44,951 : INFO : 1235/1242 documents converged within 50 iterations
+2013-11-04 09:32:44,953 : INFO : topic #0: 0.006*evolution + 0.006*tree + 0.005*species + 0.005*speciation + 0.005*selection + 0.005*reproductive + 0.005*isolation + 0.004*host + 0.004*gene + 0.004*diversification
+2013-11-04 09:32:44,954 : INFO : topic #1: 0.006*gene + 0.005*evolution + 0.005*plant + 0.004*selection + 0.004*insect + 0.004*evolutionary + 0.004*coevolution + 0.004*model + 0.004*population + 0.004*genomics
+2013-11-04 09:32:44,954 : INFO : topic #2: 0.007*evolution + 0.006*gene + 0.005*hybrid + 0.005*genetics + 0.005*adaptation + 0.004*selection + 0.004*speciation + 0.004*isolation + 0.004*sequencing + 0.004*reproductive
+2013-11-04 09:32:44,954 : INFO : topic #3: 0.007*evolution + 0.007*adaptation + 0.006*history + 0.006*drosophila + 0.006*selection + 0.006*life + 0.005*plasticity + 0.004*phenotypic + 0.004*sexual + 0.004*mating
+2013-11-04 09:32:44,955 : INFO : topic #4: 0.006*genetic + 0.006*phylogeography + 0.005*species + 0.005*population + 0.005*evolution + 0.004*genome + 0.004*genomics + 0.004*diversification + 0.004*comparative + 0.004*diversity
+2013-11-04 09:32:44,955 : INFO : topic diff=0.056814, rho=0.500000
+2013-11-04 09:32:45,101 : INFO : PROGRESS: iteration 4, at document #1242/1242
+2013-11-04 09:32:46,066 : INFO : 1235/1242 documents converged within 50 iterations
+2013-11-04 09:32:46,067 : INFO : topic #0: 0.006*evolution + 0.006*tree + 0.006*species + 0.005*speciation + 0.005*selection + 0.005*reproductive + 0.005*host + 0.005*isolation + 0.004*gene + 0.004*diversification
+2013-11-04 09:32:46,068 : INFO : topic #1: 0.006*gene + 0.005*evolution + 0.005*plant + 0.004*insect + 0.004*selection + 0.004*evolutionary + 0.004*coevolution + 0.004*population + 0.004*genomics + 0.004*model
+2013-11-04 09:32:46,068 : INFO : topic #2: 0.007*evolution + 0.006*gene + 0.006*hybrid + 0.005*genetics + 0.005*adaptation + 0.004*isolation + 0.004*speciation + 0.004*selection + 0.004*reproductive + 0.004*sequencing
+2013-11-04 09:32:46,068 : INFO : topic #3: 0.007*evolution + 0.007*adaptation + 0.006*history + 0.006*drosophila + 0.006*selection + 0.006*life + 0.005*plasticity + 0.004*phenotypic + 0.004*sexual + 0.004*species
+2013-11-04 09:32:46,068 : INFO : topic #4: 0.006*genetic + 0.006*phylogeography + 0.005*species + 0.005*population + 0.005*evolution + 0.004*genomics + 0.004*diversification + 0.004*genome + 0.004*comparative + 0.004*bayesian
+2013-11-04 09:32:46,069 : INFO : topic diff=0.040725, rho=0.447214
+2013-11-04 09:32:46,218 : INFO : PROGRESS: iteration 5, at document #1242/1242
+2013-11-04 09:32:47,190 : INFO : 1237/1242 documents converged within 50 iterations
+2013-11-04 09:32:47,192 : INFO : topic #0: 0.006*evolution + 0.006*tree + 0.006*species + 0.005*speciation + 0.005*selection + 0.005*reproductive + 0.005*host + 0.004*isolation + 0.004*gene + 0.004*diversification
+2013-11-04 09:32:47,192 : INFO : topic #1: 0.006*gene + 0.005*evolution + 0.005*plant + 0.005*insect + 0.004*evolutionary + 0.004*coevolution + 0.004*selection + 0.004*population + 0.004*genomics + 0.004*model
+2013-11-04 09:32:47,192 : INFO : topic #2: 0.007*evolution + 0.006*hybrid + 0.006*gene + 0.005*genetics + 0.005*adaptation + 0.005*isolation + 0.005*speciation + 0.004*selection + 0.004*reproductive + 0.004*sequencing
+2013-11-04 09:32:47,193 : INFO : topic #3: 0.007*evolution + 0.007*adaptation + 0.006*drosophila + 0.006*history + 0.006*selection + 0.006*life + 0.005*plasticity + 0.004*phenotypic + 0.004*sexual + 0.004*variation
+2013-11-04 09:32:47,193 : INFO : topic #4: 0.006*phylogeography + 0.006*genetic + 0.005*species + 0.005*population + 0.004*evolution + 0.004*diversification + 0.004*genomics + 0.004*comparative + 0.004*genome + 0.004*bayesian
+2013-11-04 09:32:47,193 : INFO : topic diff=0.031713, rho=0.408248
+2013-11-04 09:32:47,339 : INFO : PROGRESS: iteration 6, at document #1242/1242
+2013-11-04 09:32:48,328 : INFO : 1236/1242 documents converged within 50 iterations
+2013-11-04 09:32:48,330 : INFO : topic #0: 0.006*evolution + 0.006*tree + 0.006*species + 0.005*speciation + 0.005*selection + 0.005*reproductive + 0.005*host + 0.004*isolation + 0.004*gene + 0.004*diversification
+2013-11-04 09:32:48,330 : INFO : topic #1: 0.006*gene + 0.005*evolution + 0.005*plant + 0.005*insect + 0.004*evolutionary + 0.004*coevolution + 0.004*selection + 0.004*population + 0.004*genomics + 0.004*daphnia
+2013-11-04 09:32:48,330 : INFO : topic #2: 0.007*evolution + 0.006*hybrid + 0.006*gene + 0.005*genetics + 0.005*isolation + 0.005*speciation + 0.005*adaptation + 0.004*selection + 0.004*reproductive + 0.004*sequencing
+2013-11-04 09:32:48,331 : INFO : topic #3: 0.007*evolution + 0.007*adaptation + 0.007*drosophila + 0.006*history + 0.006*selection + 0.006*life + 0.005*plasticity + 0.005*phenotypic + 0.004*variation + 0.004*sexual
+2013-11-04 09:32:48,331 : INFO : topic #4: 0.006*phylogeography + 0.006*genetic + 0.005*species + 0.005*population + 0.004*evolution + 0.004*diversification + 0.004*comparative + 0.004*bayesian + 0.004*genomics + 0.004*genome
+2013-11-04 09:32:48,331 : INFO : topic diff=0.025685, rho=0.377964
+2013-11-04 09:32:48,477 : INFO : PROGRESS: iteration 7, at document #1242/1242
+2013-11-04 09:32:49,443 : INFO : 1230/1242 documents converged within 50 iterations
+2013-11-04 09:32:49,445 : INFO : topic #0: 0.006*evolution + 0.006*tree + 0.006*species + 0.005*speciation + 0.005*selection + 0.005*reproductive + 0.005*host + 0.004*isolation + 0.004*gene + 0.004*diversification
+2013-11-04 09:32:49,445 : INFO : topic #1: 0.006*gene + 0.005*plant + 0.005*evolution + 0.005*insect + 0.004*evolutionary + 0.004*coevolution + 0.004*selection + 0.004*population + 0.004*genomics + 0.004*daphnia
+2013-11-04 09:32:49,445 : INFO : topic #2: 0.007*evolution + 0.006*hybrid + 0.006*gene + 0.005*genetics + 0.005*speciation + 0.005*isolation + 0.005*adaptation + 0.004*reproductive + 0.004*selection + 0.004*sequencing
+2013-11-04 09:32:49,446 : INFO : topic #3: 0.007*evolution + 0.007*adaptation + 0.007*drosophila + 0.006*history + 0.006*selection + 0.006*life + 0.005*plasticity + 0.005*phenotypic + 0.004*variation + 0.004*sexual
+2013-11-04 09:32:49,446 : INFO : topic #4: 0.006*phylogeography + 0.006*genetic + 0.005*species + 0.005*population + 0.004*evolution + 0.004*diversification + 0.004*comparative + 0.004*bayesian + 0.004*genomics + 0.004*genome
+2013-11-04 09:32:49,446 : INFO : topic diff=0.022471, rho=0.353553
+2013-11-04 09:32:49,595 : INFO : PROGRESS: iteration 8, at document #1242/1242
+2013-11-04 09:32:50,545 : INFO : 1233/1242 documents converged within 50 iterations
+2013-11-04 09:32:50,547 : INFO : topic #0: 0.006*evolution + 0.006*tree + 0.006*species + 0.005*selection + 0.005*speciation + 0.005*host + 0.005*reproductive + 0.004*gene + 0.004*isolation + 0.004*diversification
+2013-11-04 09:32:50,547 : INFO : topic #1: 0.006*gene + 0.005*plant + 0.005*evolution + 0.005*insect + 0.004*evolutionary + 0.004*coevolution + 0.004*selection + 0.004*population + 0.004*daphnia + 0.004*genomics
+2013-11-04 09:32:50,548 : INFO : topic #2: 0.007*evolution + 0.006*hybrid + 0.006*gene + 0.005*genetics + 0.005*speciation + 0.005*isolation + 0.005*adaptation + 0.005*reproductive + 0.004*selection + 0.004*sequencing
+2013-11-04 09:32:50,548 : INFO : topic #3: 0.007*evolution + 0.007*adaptation + 0.007*drosophila + 0.006*history + 0.006*selection + 0.006*life + 0.005*plasticity + 0.005*phenotypic + 0.004*variation + 0.004*sexual
+2013-11-04 09:32:50,548 : INFO : topic #4: 0.006*phylogeography + 0.006*genetic + 0.005*species + 0.005*population + 0.004*evolution + 0.004*diversification + 0.004*comparative + 0.004*bayesian + 0.004*genomics + 0.004*genome
+2013-11-04 09:32:50,548 : INFO : topic diff=0.019365, rho=0.333333
+2013-11-04 09:32:50,698 : INFO : PROGRESS: iteration 9, at document #1242/1242
+2013-11-04 09:32:51,634 : INFO : 1234/1242 documents converged within 50 iterations
+2013-11-04 09:32:51,636 : INFO : topic #0: 0.006*evolution + 0.006*tree + 0.006*species + 0.005*selection + 0.005*speciation + 0.005*host + 0.005*reproductive + 0.004*gene + 0.004*isolation + 0.004*diversification
+2013-11-04 09:32:51,636 : INFO : topic #1: 0.006*gene + 0.005*plant + 0.005*evolution + 0.005*insect + 0.004*evolutionary + 0.004*coevolution + 0.004*population + 0.004*daphnia + 0.004*selection + 0.004*genomics
+2013-11-04 09:32:51,636 : INFO : topic #2: 0.007*evolution + 0.006*hybrid + 0.006*gene + 0.005*speciation + 0.005*isolation + 0.005*genetics + 0.005*adaptation + 0.005*reproductive + 0.005*selection + 0.004*sequencing
+2013-11-04 09:32:51,636 : INFO : topic #3: 0.007*evolution + 0.007*adaptation + 0.007*drosophila + 0.006*history + 0.006*selection + 0.006*life + 0.005*plasticity + 0.005*phenotypic + 0.004*variation + 0.004*sexual
+2013-11-04 09:32:51,637 : INFO : topic #4: 0.006*phylogeography + 0.006*genetic + 0.005*species + 0.005*population + 0.004*diversification + 0.004*evolution + 0.004*comparative + 0.004*bayesian + 0.004*genomics + 0.004*genome
+2013-11-04 09:32:51,637 : INFO : topic diff=0.017150, rho=0.316228
+2013-11-04 09:32:51,638 : INFO : topic #0: 0.006*evolution + 0.006*tree + 0.006*species + 0.005*selection + 0.005*speciation + 0.005*host + 0.005*reproductive + 0.004*gene + 0.004*isolation + 0.004*diversification
+2013-11-04 09:32:51,638 : INFO : topic #1: 0.006*gene + 0.005*plant + 0.005*evolution + 0.005*insect + 0.004*evolutionary + 0.004*coevolution + 0.004*population + 0.004*daphnia + 0.004*selection + 0.004*genomics
+2013-11-04 09:32:51,638 : INFO : topic #2: 0.007*evolution + 0.006*hybrid + 0.006*gene + 0.005*speciation + 0.005*isolation + 0.005*genetics + 0.005*adaptation + 0.005*reproductive + 0.005*selection + 0.004*sequencing
+2013-11-04 09:32:51,638 : INFO : topic #3: 0.007*evolution + 0.007*adaptation + 0.007*drosophila + 0.006*history + 0.006*selection + 0.006*life + 0.005*plasticity + 0.005*phenotypic + 0.004*variation + 0.004*sexual
+2013-11-04 09:32:51,639 : INFO : topic #4: 0.006*phylogeography + 0.006*genetic + 0.005*species + 0.005*population + 0.004*diversification + 0.004*evolution + 0.004*comparative + 0.004*bayesian + 0.004*genomics + 0.004*genome
+2013-11-04 09:32:51,639 : WARNING : scanning corpus to determine the number of features (consider setting `num_features` explicitly)
+2013-11-04 09:32:52,635 : INFO : creating matrix for 1242 documents and 5 features
