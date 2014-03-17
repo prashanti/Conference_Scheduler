@@ -3,6 +3,7 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 import math
 import gensim
 from collections import Counter
+from stemming.porter2 import stem
 import logging
 #logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 import numpy as np
@@ -154,7 +155,6 @@ def intercluster(simlist,the_list,model):
 	global tfidfintermedianlist
 	global lsiintermedianlist
 	global ldaintermedianlist
-	#print "model is",model
 	for x in the_list:
 		for y in the_list:
 			if set(x) != set(y):
@@ -199,7 +199,7 @@ masterlist=setesa()
 
 ################### 
 
-dictionary = corpora.Dictionary(line.lower().split() for line in open(inputfile))
+dictionary = corpora.Dictionary([[stem(word) for word in line.lower().split()] for line in open(inputfile)])
 stop_ids = [dictionary.token2id[stopword] for stopword in stoplist if stopword in dictionary.token2id]
 once_ids = [tokenid for tokenid, docfreq in dictionary.dfs.iteritems() if docfreq == 1]
 dictionary.filter_tokens(stop_ids + once_ids) 
@@ -221,6 +221,7 @@ class MyCorpus(object):
 			words=line.lower().split()
 			tmp=Counter()
 			for word in words:
+				word=stem(word).strip()
 				if (tmp[word]!=1):
 					freq[word] +=1
 				tmp[word]=1
@@ -229,7 +230,7 @@ class MyCorpus(object):
 		for line in open(inputfile):
 			# assume there's one document per line, tokens separated by whitespace
 			newline=list()
-			newline=line.lower().split()
+			newline=[stem(word) for word in line.lower().split()]
 			for word in newline:
 				word=word.strip()
 				if word in stoplist:
