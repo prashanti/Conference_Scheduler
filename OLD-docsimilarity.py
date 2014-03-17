@@ -1,14 +1,13 @@
 import warnings
 warnings.filterwarnings('ignore', category=DeprecationWarning)
-import math
+from math import sqrt
 import gensim
 from collections import Counter
 import logging
 #logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-import numpy as np
+import numpy
 from gensim import corpora, models, similarities
 import sys
-import scipy.stats
 from random import choice
 session1=[]
 allsessions=[]
@@ -20,17 +19,6 @@ for line in open('stopwords.txt'):
 ###################
 
 notopics=30
-
-
-#out = open('AllResults.txt','a')
-dist = open('Distribution.txt','a')
-dorandom=0
-
-#inputfile='ESA-Corpus-Titles.txt'
-#inputfile='ESA-Corpus-Titles+Abstracts.txt'
-#inputfile='ESA-Corpus-Titles+Keywords-100topics.txt'
-inputfile='ESA-Corpus-Titles+Abstracts+Keywords-100topics.txt'
-
 
 tfidfclustersum=0
 lsiclustersum=0
@@ -49,13 +37,6 @@ tfidfintermedianlist=[]
 lsiintermedianlist=[]
 ldaintermedianlist=[]
 
-def evolutiontestsessions():
-	global session1,session2
-	session1=[[1,2],[3,4]]
-	session2=[[5,6]]
-	allsessions.append(session1)
-	allsessions.append(session2)
-	return allsessions
 def evolutionsessions():
 	global session1,session2,session3,session4,session5,session6,session7,allsessions
 	session1=[[1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11], [12, 13, 14, 15, 16], [17, 18, 19, 20, 21, 22], [23, 24, 25, 26, 27, 28], [29, 30, 31, 32, 33, 34], [35, 36, 37, 38, 39, 40], [41, 42, 43, 44, 45, 46], [47, 48, 49, 50, 51], [52, 53, 54, 55, 56, 57], [58, 59, 60, 61], [62, 63, 64, 65, 66, 67], [68, 69, 70, 71, 72, 73], [74, 75, 76, 77, 78, 79], [80, 81, 82, 83, 84, 85], [86, 87, 88, 89, 90], [91, 92, 93, 94, 95, 96], [97, 98, 99, 100, 101], [102, 103, 104, 105, 106], [107, 108, 109, 110, 111], [112, 113, 114, 115, 116], [117, 118, 119, 120, 121, 122,123]]
@@ -93,7 +74,8 @@ def esasessions():
 	return allsessions
 
 def setevolution():
-	the_list=evolutiontestsessions()
+	evolutionsessions()
+	the_list=createsession()
 	return the_list
 	
 
@@ -134,7 +116,7 @@ def createrandomsessionnew(session):
 def randomalldocs():
 	listoflist=[]
 	i=0
-	alldocs=range(1,324)
+	alldocs=range(1,325)
 	j=0
 	while i<5:
 		x=[]
@@ -149,12 +131,10 @@ def randomalldocs():
 	return listoflist
 
 def intercluster(simlist,the_list,model):
-	
-	model=model.strip()
 	global tfidfintermedianlist
 	global lsiintermedianlist
 	global ldaintermedianlist
-	#print "model is",model
+	print "model is",model
 	for x in the_list:
 		for y in the_list:
 			if set(x) != set(y):
@@ -168,6 +148,7 @@ def intercluster(simlist,the_list,model):
 						if model is "lda":
 							ldaintermedianlist.append(simlist[doc1-1][doc2-1])	
 		the_list=filter(lambda a: a != x, the_list)
+
 
 def getkeywords():
 	f = open('keywords-100topics.txt','w')
@@ -191,10 +172,12 @@ def getkeywords():
 
 
 
+#inputfile='ESA-Corpus-Titles.txt'
+#inputfile='ESA-Corpus-Titles+Abstracts.txt'
+inputfile='ESA-Corpus-Titles+Keywords-100topics.txt'
+#inputfile='ESA-Corpus-Titles+Abstracts+Keywords-100topics.txt'
 #the_list=setevolution()
-
 masterlist=setesa()
-#masterlist=setevolution()
 
 
 ################### 
@@ -251,33 +234,20 @@ dictionary = corpora.Dictionary.load('./storeddictionary.dict')
 corpus = corpora.MmCorpus('./storedcorpus.mm')
 
 	###################
-
-
-# Creating Models here
-tfidf = models.TfidfModel(corpus) # step 1 -- initialize a model
-corpus_tfidf = tfidf[corpus]
-
-lsi = models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=notopics)
-corpus_lsi = lsi[corpus_tfidf]
-
-lda = models.LdaModel(corpus_tfidf, id2word=dictionary, num_topics=notopics,passes=40) 
-corpus_lda = lda[corpus_tfidf]
-
-
-
 tfidfintramedianlist=[]
 lsiintramedianlist=[]
 ldaintramedianlist=[]
 for the_list in masterlist:
 	#the_list=createrandomsessionnew(the_list)
-	if dorandom ==1:
-		the_list=randomalldocs()
-		#print the_list,"\n\n"
+	the_list=randomalldocs()
+	#print the_list,"\n\n"
 	for eachcluster in the_list:
 
 
 		################### TFIDF
 		tfidfsimlist=[]
+		tfidf = models.TfidfModel(corpus) # step 1 -- initialize a model
+		corpus_tfidf = tfidf[corpus]
 		index = similarities.MatrixSimilarity(corpus_tfidf)
 		docno=1
 		cluster=eachcluster
@@ -289,8 +259,6 @@ for the_list in masterlist:
 			if docno in cluster:
 				for item in cluster:
 					if docno != item:
-						#print "doing",docno,item
-						#print "sim is",testlist[item-1][1]
 						tfidfintramedianlist.append(testlist[item-1][1])
 				cluster=filter(lambda a: a != docno, cluster)
 			docno=docno+1
@@ -300,7 +268,9 @@ for the_list in masterlist:
 
 
 
-		################## LSI 
+		################## LSI
+		lsi = models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=notopics)
+		corpus_lsi = lsi[corpus_tfidf] 
 		lsisimlist=[]
 		index = similarities.MatrixSimilarity(corpus_lsi)
 		docno=1
@@ -320,7 +290,9 @@ for the_list in masterlist:
 		###################
 
 		################### LDA
-		ldasimlist=[] 
+		ldasimlist=[]
+		lda = models.LdaModel(corpus_tfidf, id2word=dictionary, num_topics=notopics,passes=40) 
+		corpus_lda = lda[corpus_tfidf] 
 		index = similarities.MatrixSimilarity(corpus_lda)
 		docno=1
 		cluster=eachcluster
@@ -347,95 +319,27 @@ for the_list in masterlist:
 
 
 
-# print "TFIDF  Within Cluster Mean", np.mean(tfidfintramedianlist)
-# print "LSI  Within Cluster Mean", np.mean(lsiintramedianlist)
-# print "LDA  Within Cluster Mean", np.mean(ldaintramedianlist)
-
-# print "TFIDF  Between Cluster Mean", np.mean(tfidfintermedianlist)
-# print "LSI  Between Cluster Mean", np.mean(lsiintermedianlist)
-# print "LDA  Between Cluster Mean", np.mean(ldaintermedianlist)
 
 
 
 
 
-# print "TFIDF  Within Cluster Median", np.median(tfidfintramedianlist)
-# print "LSI  Within Cluster Median", np.median(lsiintramedianlist)
-# print "LDA  Within Cluster Median", np.median(ldaintramedianlist)
+print "TFIDF  Within Cluster Median", numpy.median(tfidfintramedianlist)
+print "LSI  Within Cluster Median", numpy.median(lsiintramedianlist)
+print "LDA  Within Cluster Median", numpy.median(ldaintramedianlist)
 
-#print np.median(tfidfintramedianlist)-np.percentile(tfidfintramedianlist,25),"\t",np.percentile(tfidfintramedianlist,75)-np.median(tfidfintramedianlist)
-#print np.median(lsiintramedianlist)-np.percentile(lsiintramedianlist,25),"\t",np.percentile(lsiintramedianlist,75)-np.median(lsiintramedianlist)
-#print np.median(ldaintramedianlist)-np.percentile(ldaintramedianlist,25),"\t",np.percentile(ldaintramedianlist,75)-np.median(ldaintramedianlist)
-#print"\n\n"
+print"\n\n"
 
-# print "TFIDF  Between Cluster Median", np.median(tfidfintermedianlist)
-# print "LSI  Between Cluster Median", np.median(lsiintermedianlist)
-# print "LDA  Between Cluster Median", np.median(ldaintermedianlist)
+print "TFIDF  Between Cluster Median", numpy.median(tfidfintermedianlist)
+print "LSI  Between Cluster Median", numpy.median(lsiintermedianlist)
+print "LDA  Between Cluster Median", numpy.median(ldaintermedianlist)
 
-#print np.median(tfidfintermedianlist)-np.percentile(tfidfintermedianlist,25),"\t",np.percentile(tfidfintermedianlist,75)-np.median(tfidfintermedianlist)
-#print np.median(lsiintermedianlist)-np.percentile(lsiintermedianlist,25),"\t",np.percentile(lsiintermedianlist,75)-np.median(lsiintermedianlist)
-#print np.median(ldaintermedianlist)-np.percentile(ldaintermedianlist,25),"\t",np.percentile(ldaintermedianlist,75)-np.median(ldaintermedianlist)
+print"\n\n" 
+print "TFIDF Median Ratio", numpy.median(tfidfintramedianlist)/numpy.median(tfidfintermedianlist)
+print "LSI Median Ratio", numpy.median(lsiintramedianlist)/numpy.median(lsiintermedianlist)
+print "LDA Median Ratio", numpy.median(ldaintramedianlist)/numpy.median(ldaintermedianlist)
 
-#print"\n\n" 
-# print "TFIDF Median Ratio", np.median(tfidfintramedianlist)/np.median(tfidfintermedianlist)
-# print "LSI Median Ratio", np.median(lsiintramedianlist)/np.median(lsiintermedianlist)
-# print "LDA Median Ratio", np.median(ldaintramedianlist)/np.median(ldaintermedianlist)
-
-#print"\n\n"
-
-print "TFIDF Mean Ratio", np.mean(tfidfintramedianlist)/np.mean(tfidfintermedianlist)
-print "LSI Mean Ratio", np.mean(lsiintramedianlist)/np.mean(lsiintermedianlist)
-print "LDA Mean Ratio", np.mean(ldaintramedianlist)/np.mean(ldaintermedianlist)
+print"\n\n"
 
 
-
-
-
-
-
-
-
-tfidfintrase=scipy.stats.tstd(tfidfintramedianlist)/math.sqrt(len(tfidfintramedianlist))
-tfidfinterse=scipy.stats.tstd(tfidfintermedianlist)/math.sqrt(len(tfidfintermedianlist))
-
-lsiintrase=scipy.stats.tstd(lsiintramedianlist)/math.sqrt(len(lsiintramedianlist))
-lsiinterse=scipy.stats.tstd(lsiintermedianlist)/math.sqrt(len(lsiintermedianlist))
-
-ldaintrase=scipy.stats.tstd(ldaintramedianlist)/math.sqrt(len(ldaintramedianlist))
-ldainterse=scipy.stats.tstd(ldaintermedianlist)/math.sqrt(len(ldaintermedianlist))
-
-dist.write(inputfile+"\n")
-dist.write("TFIDF" +"\n" + str(tfidfintramedianlist)+"\n")
-dist.write("LSI" +"\n" + str(lsiintramedianlist)+"\n")
-dist.write("LDA" +"\n" + str(ldaintramedianlist)+"\n")
-
-#tfidf = open('TFIDF-Random.txt','a')
-#lsi = open('LSI-Random.txt','a')
-#lda = open('LDA-Random.txt','a')
-
-
-#######
-#Model	Mean_Similarity	STDE	Data	Similarity_Type
-# tfidfstring="TFIDF"+"\t"+ str(np.mean(tfidfintramedianlist))+ "\t"+str(tfidfintrase)+"\t"+inputfile+ "\t" +"Intra_Session_Similarity"+"\n"
-# tfidf.write(tfidfstring)
-
-# tfidfstring="TFIDF"+"\t"+ str(np.mean(tfidfintermedianlist))+ "\t"+str(tfidfinterse)+"\t"+inputfile+ "\t" +"Inter_Session_Similarity"+"\n"
-# tfidf.write(tfidfstring)
-
-# ######
-
-# lsistring="LSI"+"\t"+ str(np.mean(lsiintramedianlist))+ "\t"+str(lsiintrase)+"\t"+inputfile+ "\t" +"Intra_Session_Similarity"+"\n"
-# lsi.write(lsistring)
-
-# lsistring="LSI"+"\t"+ str(np.mean(lsiintermedianlist))+ "\t"+str(lsiinterse)+"\t"+inputfile+ "\t" +"Inter_Session_Similarity"+"\n"
-# lsi.write(lsistring)
-# #######
-
-# ldastring="LDA"+"\t"+ str(np.mean(ldaintramedianlist))+ "\t"+str(ldaintrase)+"\t"+inputfile+ "\t" +"Intra_Session_Similarity"+"\n"
-# lda.write(ldastring)
-
-# ldastring="LDA"+"\t"+ str(np.mean(ldaintermedianlist))+ "\t"+str(ldainterse)+"\t"+inputfile+ "\t" +"Inter_Session_Similarity"+"\n"
-# lda.write(ldastring)
-
-#########
 #getkeywords()
