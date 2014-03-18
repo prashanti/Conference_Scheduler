@@ -69,7 +69,6 @@ class MyCorpus(object):
 					newline = filter(lambda a: a != word, newline)
 				if ((freq[word]==1) & (word not in stoplist)):
 					newline = filter(lambda a: a != word, newline)
-			print newline
 			yield dictionary.doc2bow(newline)
 
 corpus_memory_friendly = MyCorpus() 
