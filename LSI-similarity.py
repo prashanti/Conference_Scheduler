@@ -5,6 +5,8 @@ import gensim
 from collections import Counter
 from stemming.porter2 import stem
 import logging
+import os
+
 #logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 import numpy as np
 from gensim import corpora, models, similarities
@@ -24,7 +26,11 @@ for line in open('stopwords.txt'):
 
 
 inputfile=str(sys.argv[1])
+corpussize = sum(1 for line in open(inputfile))
+print corpussize
 notopics=str(sys.argv[2])
+
+Scorematrix = [[0 for x in xrange(corpussize)] for x in xrange(corpussize)]
 
 
 
@@ -95,14 +101,21 @@ corpus_lsi = lsi[corpus_tfidf]
 ################## LSI 
 lsisimlist=[]
 index = similarities.MatrixSimilarity(corpus_lsi)
-docno=1
+row=0
 for doc in corpus_lsi:
+	col=0
 	sims = index[doc]
 	lsisimlist.append(list(sims))
-	testlist= list(enumerate(sims))
-	# for each document, testlist holds the similarities between that document to all other documents in the corpus (including itself)
-	print testlist
+	scorelist= list(enumerate(sims))
+	# for each document, scorelist holds the similarities between that document to all other documents in the corpus (including itself)
+	print scorelist
+	for score in scorelist:
+		Scorematrix[row][col]=score[1]
+		col=col+1
+	row=row+1	
 
+
+# NOTE: Scores are in the 2D array Scorematrix. To get the similarity score between document x and document y, access Scorematrix[x-1][y-1]
 
 
 		

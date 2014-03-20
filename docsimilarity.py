@@ -125,7 +125,6 @@ def createrandomsessionnew(session):
 	for outerlist in session:
 		temp=[]
 		for innerlist in session:
-			#print innerlist
 			if innerlist != []:
 				random=choice(innerlist)
 				temp.append(random)
