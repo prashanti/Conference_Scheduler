@@ -1,14 +1,7 @@
 Python_NLP
 ==========
+This project contains code to obtain pairwise similarity of talks from a conference. It also contains algorithms to schedule talks for the Evolution 2014 conference. 
 
-----gensim-tfidf.py ------
-This script operates on an example corpus with 9 documents and computes similarity between all pairs of documents.
-The following measures of similarity are used :
+Three topic models (LDA, LSI and TFIDF) were compared on different combinations of data (Abstracts+Titles, Titles+Keywords, Abstracts+Titles+Keywords) from the ESA 2013 conference. This comparison enabled us to make the decision on what data to gather for Evolution 2014. A write-up of this comparison is at https://www.writelatex.com/read/qdqqgpyfctgn
 
-1. A simple Term Frequency - Inverse Document Frequency matrix combined with cosine similarity. 
-2. Latent Semantic Indexing model on the tfidf matrix combined with cosine similarity
-3. Latent Dirichlet Allocation model on the tfidf matrix combined with cosine similarity
-
------tfidf.py--------
-
-This script uses Python's scikit-learn to compute cosine document similarity between all pairs of an example corpus. 
+A randomized swapping algorithm is being explored to improve initial schedules. The algorithm starts from a real schedule and conducts 5000 iterations on the schedule to arrive at the best schedule. A write-up of this algorithm and others used for scheduling is at https://www.writelatex.com/read/vcygyjhpbzhj
