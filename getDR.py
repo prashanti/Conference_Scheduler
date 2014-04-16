@@ -1,6 +1,3 @@
-
-
-
 def populatescorematrix():
 	scorematrix = []
 	pairwisescores=str(sys.argv[1])
@@ -58,9 +55,10 @@ def main():
 	intermean=numpy.mean(intersimlist)
 	drmean=intramean/intermean
 	drmedian=intramedian/intermedian
-	print "Drmedian ",round(drmedian,3)
+	drmedian=round(drmedian,3)
+	print "Drmedian ",drmedian
 	print "Drmean ",round(drmean,3)
-	
+
 
 
 if __name__ == "__main__":
