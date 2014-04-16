@@ -1,31 +1,11 @@
-
-def populateschedule():
-	global session1,session2,session3,session4,session5,session6,session7,session8,schedule,alldocs,alldocs1
+def populateschedulefromfile():
 	schedule=[]
-	alldocs=range(1,325)
-	alldocs1=range(1,325)
-	session1=[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [11, 12, 13, 14, 15, 16, 17, 18, 19, 20], [21, 22, 23, 24, 25, 26, 27, 28, 29], [30, 31, 32, 33, 34, 35, 36, 37, 38, 39], [40, 41, 42, 43, 44, 45, 46, 47, 48, 49]]
-	session2=[[50, 51, 52, 53, 54, 55, 56, 57, 58, 59], [60, 61, 62, 63, 64, 65, 66, 67, 68], [69, 70, 71, 72, 73, 74, 75, 76, 77, 78], [79, 80, 81, 82, 83, 84, 85, 86], [87, 88, 89, 90, 91, 92, 93]]
-	session3=[[94, 95, 96, 97, 98, 99, 100, 101, 102], [103, 104, 105, 106, 107, 108, 109, 110, 111, 112], [113, 114, 115, 116, 117, 118, 119, 120, 121, 122], [123, 124, 125, 126, 127, 128, 129, 130, 131, 132]]
-	session4=[[133, 134, 135, 136, 137, 138, 139, 140, 141, 142], [143, 144, 145, 146, 147, 148, 149, 150, 151, 152], [153, 154, 155, 156, 157, 158, 159, 160, 161, 162], [163, 164, 165, 166, 167, 168, 169, 170, 171, 172], [173, 174, 175, 176, 177, 178, 179, 180, 181, 182]]
-	session5= [[183, 184, 185, 186, 187, 188, 189, 190, 191, 192], [193, 194, 195, 196, 197, 198, 199, 200, 201], [202,203, 204, 205, 206, 207, 208, 209, 210, 211]]
-
-	session6=[[212, 213, 214, 215, 216, 217, 218, 219, 220, 221], [222, 223, 224, 225, 226, 227, 228, 229, 230, 231], [232, 233, 234, 235, 236, 237, 238, 239, 240], [241, 242, 243, 244, 245, 246, 247, 248, 249, 250]]
-	session7=[[251, 252, 253, 254, 255], [256, 257, 258, 259, 260, 261, 262, 263, 264], [265, 266, 267, 268, 269, 270, 271, 272, 273, 274], [275, 276, 277, 278, 279, 280, 281, 282, 283, 284]]
-	session8=[[285, 286, 287, 288, 289, 290, 291, 292, 293, 294], [295, 296, 297, 298, 299, 300, 301, 302, 303, 304], [305, 306, 307, 308, 309, 310, 311, 312, 313, 314], [315, 316, 317, 318, 319, 320, 321, 322, 323, 324]]
-
-
-	schedule.append(session1)
-	schedule.append(session2)
-	schedule.append(session3)
-	schedule.append(session4)
-	schedule.append(session5)
-	schedule.append(session6)
-	schedule.append(session7)
-	schedule.append(session8)
+	schedulefile=sys.argv[1]
+	with open(schedulefile) as f:
+		schedule = json.load(f)
+	return(schedule)
 
 def populatetestschedule():
-	global session1,session2,schedule,alldocs,alldocs1
 	schedule=[]
 	alldocs=range(1,9)
 	alldocs1=range(1,9)
@@ -34,39 +14,39 @@ def populatetestschedule():
 	schedule.append(session1)
 	schedule.append(session2)
 
-def calculateintrasimilarity(timeslot):
-	global intrasimlist
-
+def calculateintrasimilarity(timeslot, intrasimlist,scorematrix):
 	for session in timeslot:
 		for i in range (0, len(session)):
 			for j in range(i+1, len(session)):
 				doc1=session[i]
 				doc2=session[j]
 				intrasimlist.append(scorematrix[doc1-1][doc2-1])
-		
+				#print "Sim of "+ str(doc1) + " " + str(doc2) +" is "+ str(scorematrix[doc1-1][doc2-1])
+	return intrasimlist
 
+def calculateintersimilarity(timeslot, intersimlist,scorematrix):
+	for i in range (0,len(timeslot)):
+		for j in range (i+1,len(timeslot)):
+			for p in range (0,len(timeslot[i])):
+				for q in range(0, len(timeslot[j])):
+					doc1=timeslot[i][p]
+					doc2=timeslot[j][q]
+					intersimlist.append(scorematrix[doc1-1][doc2-1])
+					#print "Sim of "+ str(doc1) + " " + str(doc2) +" is "+ str(scorematrix[doc1-1][doc2-1])
 
+	return intersimlist
 
-def calculateintersimilarity(timeslot):
-	global intersimlist
-
-	for combo in itertools.product(*timeslot):
-		doc1=combo[0]
-		doc2=combo[1]
-		intersimlist.append(scorematrix[doc1-1][doc2-1])
-
-def calculate(schedule):
-	global intersimlist,intrasimlist
+def calculate(schedule,scorematrix):
 	intersimlist=[]
 	intrasimlist=[]
 	for timeslot in schedule:
-		calculateintersimilarity(timeslot)
-		calculateintrasimilarity(timeslot)
-
+		intersimlist = calculateintersimilarity(timeslot, intersimlist,scorematrix)
+		intrasimlist = calculateintrasimilarity(timeslot, intrasimlist,scorematrix)
+	return intersimlist,intrasimlist
 
 def populatescorematrix():
-	global scorematrix
-	pairwisescores=str(sys.argv[1])
+	scorematrix=[]
+	pairwisescores=str(sys.argv[2])
 	scorefile=open(pairwisescores,'r')
 	for line in scorefile:
 		rowscores=[]
@@ -74,7 +54,7 @@ def populatescorematrix():
 		for score in scores:
 			rowscores.append(float(score.strip()))
 		scorematrix.append(rowscores)
-
+	return scorematrix
 
 def sort(schedule):
 	sortedschedule=[]
@@ -85,27 +65,23 @@ def sort(schedule):
 		sortedschedule.append(sortedtimeslot)
 	return(sortedschedule)
 
+def randomizeschedulewithparameters(timeslots,sessions,talks):
+	alldocs1=range(1,325)
+	newschedule=[]
+	for timeslot in range(1,timeslots+1):
+		newtimeslot=[]
+		for session in range(1,sessions+1):
+			newsession=[]
+			for talknumber in range(1,talks+1):
+				random=choice(alldocs1)
+				alldocs1=filter(lambda a: a != random, alldocs1)
+				newsession.append(random)
+			newtimeslot.append(newsession)
+		newschedule.append(newtimeslot)
+	return(newschedule)			
 
-
-def randomalldocs():
-	global alldocs1
-	listoflist=[]
-	i=0
-	j=0
-	while i<5:
-		x=[]
-		j=0
-		while j<5:
-			random=choice(alldocs1)
-			alldocs1=filter(lambda a: a != random, alldocs1)
-			x.append(random)
-			j+=1
-		listoflist.append(x)
-		i+=1
-	return listoflist 			
-
-def randomizeschedule():
-	global schedule,alldocs1
+def randomizeschedule(schedule):
+	alldocs1=range(1,325)
 	newschedule=[]
 	for timeslot in schedule:
 		newtimeslot=[]
@@ -117,46 +93,24 @@ def randomizeschedule():
 				newsession.append(random)
 			newtimeslot.append(newsession)
 		newschedule.append(newtimeslot)
-	schedule = copy.deepcopy(newschedule)
+	return(newschedule)
 
 
 
 
+def log_results(result):
+	results.append(result)
 
 
-
-def main():
-	count=str(sys.argv[2])
-	random=str(sys.argv[3])
-
-
-	global schedule,intrasimlist,intersimlist,alldocs
-	populateschedule()
-	populatescorematrix()
+def worker(count,random,schedule,scorematrix,iterations):
+	alldocs=range(1,325)
+	intrasimlist=[]
+	intersimlist=[]
+	drdistribution=[]
 	if random is '1':
+		schedule=randomizeschedule(schedule)
 		
-		drfile="Random_DR_Randomized_"+str(count)+".txt"
-		swapfile="Random_Swap_Randomized_"+str(count)+".txt"
-		bestdrout=open("Random_BestDR.txt",'a')
-		startingschedulefile="Random_StartingSchedule.txt"
-		startingschedule=open(startingschedulefile,'a')
-		finalschedulefile="Random_BestSchedule.txt"
-		finalschedule=open(finalschedulefile,'a')
-		randomizeschedule()
-		startingschedule.write(count+"\t")
-		json.dump(schedule,startingschedule)
-		startingschedule.write("\n")
-	else:
-		finalschedulefile="BestSchedule.txt"
-		finalschedule=open(finalschedulefile,'a')
-		drfile="DR_Randomized_"+str(count)+".txt"
-		swapfile="Swap_Randomized_"+str(count)+".txt"
-		bestdrout=open("BestDR.txt",'a')
-	drout=open(drfile,'w')
-	swapout=open(swapfile,'w')
-
-	calculate(schedule)
-	originalschedule = copy.deepcopy(schedule)
+	intersimlist,intrasimlist = calculate(schedule,scorematrix)
 	intramean=numpy.mean(intrasimlist)
 	intermean=numpy.mean(intersimlist)
 	drmean=intramean/intermean
@@ -165,14 +119,15 @@ def main():
 	intramedian=numpy.median(intrasimlist)
 	intermedian=numpy.median(intersimlist)
 	drmedian=intramedian/intermedian
-	print "Initial DR Mean " +str(round(drmean,3))
-	print "Initial DR Median "+ str(round(drmedian,3))
-	drout.write(str(round(drmedian,3))+"\n")
-	#print "\n\n"
+	# print "Initial DR Mean " +str(drmean)
+	# print "Initial DR Median "+ str(drmedian)
+	
+	drdistribution.append(round(drmedian,3))
+
 
 	
 	better=0
-	while (better<5):
+	while (better<iterations):
 
 		
 		tempschedule=copy.deepcopy(schedule)
@@ -193,45 +148,67 @@ def main():
 					ysessionindex= timeslot.index(session)
 					ytimeslotindex= schedule.index(timeslot)
 
+
 		if xsessionindex==ysessionindex and xtimeslotindex==ytimeslotindex:
 			1
-
 		else:
 			better+=1
 			tempschedule[ytimeslotindex][ysessionindex][yindex],tempschedule[xtimeslotindex][xsessionindex][xindex] = tempschedule[xtimeslotindex][xsessionindex][xindex], tempschedule[ytimeslotindex][ysessionindex][yindex] 
 			
-			calculate(tempschedule)
+			intersimlist,intrasimlist = calculate(tempschedule,scorematrix)
+
 			intramean=numpy.mean(intrasimlist)
 			intermean=numpy.mean(intersimlist)
 			newdrmean=intramean/intermean
-			
+						
 
 			intramedian=numpy.median(intrasimlist)
 			intermedian=numpy.median(intersimlist)
 			newdrmedian=intramedian/intermedian
 			
 			if newdrmedian > drmedian:
+				
 				schedule=copy.deepcopy(tempschedule)
 			
-				swapout.write("Swapping "+str(x)+" "+str(y)+"\n")
-		
 				drmean=newdrmean
 				drmedian=newdrmedian
-				drout.write(str(round(newdrmedian,3))+"\n")
+				
+				drdistribution.append(round(newdrmedian,3))
 			else:
-				drout.write(str(round(drmedian,3))+"\n")
 			
-	
-			
-	finalschedule.write(count+"\t")
-	json.dump(schedule,finalschedule)
-	finalschedule.write("\n")
-
-	bestdrout.write(str(count)+"\t"+str(round(drmedian,3))+"\n")
+				drdistribution.append(round(drmedian,3))
+	print count,schedule
+	return(count,drdistribution,round(drmedian,3))
 				
 
 
+def writetofile(ofileloc,results):
+	x = [a[1] for a in sorted(results,key=lambda x:x[0])]
+	rows = zip(*x)
+	ofile = open(ofileloc, 'w');
+	writer = csv.writer(ofile,delimiter='\t',)
+	for item in rows:
+   		writer.writerow(item)
+	ofile.close()
 
+def main():
+	
+	print cpu_count()
+	runs=int(sys.argv[3])
+	iterations=int(sys.argv[4])
+	random=int(sys.argv[5])
+	ofile=str(sys.argv[6])
+
+	pool = Pool(processes=cpu_count())
+	schedule = populateschedulefromfile()
+	scorematrix = populatescorematrix()
+
+	for i in range(runs):
+		pool.apply_async(worker, args = (i,random,schedule,scorematrix,iterations,), callback = log_results)
+	pool.close()
+	pool.join()
+	writetofile(ofile,results)
+	
 if __name__ == "__main__":
 	import sys
 	import numpy
@@ -239,23 +216,13 @@ if __name__ == "__main__":
 	import json
 	from random import choice
 	from datetime import datetime
+	from multiprocessing import Process, Pool, cpu_count
 	import time
-	import itertools
-	scorematrix=[]
-	session1=[]
-	session2=[]
-	session3=[]
-	session4=[]
-	session5=[]
-	session6=[]
-	session7=[]
-	session8=[]
-	schedule=[]
-	alldocs1=[]
-	intrasimlist=[]
-	intersimlist=[]
-	alldocs=[]
+	import csv
+
+
+	results=[]
 	start_time = time.time()
 	main()
 	print time.time() - start_time, "seconds"
-
+	
