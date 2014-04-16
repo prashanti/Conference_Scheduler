@@ -27,7 +27,6 @@ for line in open('stopwords.txt'):
 
 inputfile=str(sys.argv[1])
 corpussize = sum(1 for line in open(inputfile))
-print corpussize
 notopics=str(sys.argv[2])
 
 Scorematrix = [[0 for x in xrange(corpussize)] for x in xrange(corpussize)]
@@ -108,13 +107,19 @@ for doc in corpus_lsi:
 	lsisimlist.append(list(sims))
 	scorelist= list(enumerate(sims))
 	# for each document, scorelist holds the similarities between that document to all other documents in the corpus (including itself)
-	print scorelist
 	for score in scorelist:
 		Scorematrix[row][col]=score[1]
 		col=col+1
 	row=row+1	
 
-
+row=0
+col=0
+scores=""
+for row in range(0,corpussize):
+ 	for col in range (0,corpussize):
+		scores=scores+"\t"+str(Scorematrix[row][col]).strip()
+	print scores.strip()
+	scores=""	
 # NOTE: Scores are in the 2D array Scorematrix. To get the similarity score between document x and document y, access Scorematrix[x-1][y-1]
 
 
