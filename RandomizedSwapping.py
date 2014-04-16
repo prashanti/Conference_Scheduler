@@ -36,31 +36,24 @@ def populatetestschedule():
 
 def calculateintrasimilarity(timeslot):
 	global intrasimlist
-	#intrasimlist=[]
-	# this is like [[1,2],[3,4],[5,6]]
-	# do 1 2, 3 4, 5 6 and add 3 values to intralist
+
 	for session in timeslot:
 		for i in range (0, len(session)):
 			for j in range(i+1, len(session)):
 				doc1=session[i]
 				doc2=session[j]
 				intrasimlist.append(scorematrix[doc1-1][doc2-1])
-				#print "Sim of "+ str(doc1) + " " + str(doc2) +" is "+ str(scorematrix[doc1-1][doc2-1])
+		
+
 
 
 def calculateintersimilarity(timeslot):
 	global intersimlist
-	#intersimlist=[]
-	# this is like [[1,2,9],[3,4]]
-	# do 1 3, 1 4, 2 3, 2 4, 9 3, 9 4 and add 6 values to list
-	for i in range (0,len(timeslot)):
-		for j in range (i+1,len(timeslot)):
-			for p in range (0,len(timeslot[i])):
-				for q in range(0, len(timeslot[j])):
-					doc1=timeslot[i][p]
-					doc2=timeslot[j][q]
-					intersimlist.append(scorematrix[doc1-1][doc2-1])
-					#print "Sim of "+ str(doc1) + " " + str(doc2) +" is "+ str(scorematrix[doc1-1][doc2-1])
+
+	for combo in itertools.product(*timeslot):
+		doc1=combo[0]
+		doc2=combo[1]
+		intersimlist.append(scorematrix[doc1-1][doc2-1])
 
 def calculate(schedule):
 	global intersimlist,intrasimlist
@@ -150,17 +143,18 @@ def main():
 		finalschedulefile="Random_BestSchedule.txt"
 		finalschedule=open(finalschedulefile,'a')
 		randomizeschedule()
+		startingschedule.write(count+"\t")
+		json.dump(schedule,startingschedule)
+		startingschedule.write("\n")
 	else:
+		finalschedulefile="BestSchedule.txt"
+		finalschedule=open(finalschedulefile,'a')
 		drfile="DR_Randomized_"+str(count)+".txt"
 		swapfile="Swap_Randomized_"+str(count)+".txt"
 		bestdrout=open("BestDR.txt",'a')
 	drout=open(drfile,'w')
 	swapout=open(swapfile,'w')
-	if random is '1':
-		
-		startingschedule.write(count+"\t")
-    	json.dump(schedule,startingschedule)
-    	startingschedule.write("\n")
+
 	calculate(schedule)
 	originalschedule = copy.deepcopy(schedule)
 	intramean=numpy.mean(intrasimlist)
@@ -171,14 +165,14 @@ def main():
 	intramedian=numpy.median(intrasimlist)
 	intermedian=numpy.median(intersimlist)
 	drmedian=intramedian/intermedian
-	#print "Initial DR Mean " +str(round(drmean,3))
-	#print "Initial DR Median "+ str(round(drmedian,3))
+	print "Initial DR Mean " +str(round(drmean,3))
+	print "Initial DR Median "+ str(round(drmedian,3))
 	drout.write(str(round(drmedian,3))+"\n")
 	#print "\n\n"
 
 	
 	better=0
-	while (better<5000):
+	while (better<5):
 
 		
 		tempschedule=copy.deepcopy(schedule)
@@ -199,9 +193,6 @@ def main():
 					ysessionindex= timeslot.index(session)
 					ytimeslotindex= schedule.index(timeslot)
 
-		#DR Mean 4.02724661516
-		#DR Median 5.54749218832
-		# the talks to be swapped are in the same session. 
 		if xsessionindex==ysessionindex and xtimeslotindex==ytimeslotindex:
 			1
 
@@ -220,30 +211,14 @@ def main():
 			newdrmedian=intramedian/intermedian
 			
 			if newdrmedian > drmedian:
-				
-				#print "starting with"
-				#print schedule
 				schedule=copy.deepcopy(tempschedule)
-				#print "Swapping "+str(x)+" "+str(y)
+			
 				swapout.write("Swapping "+str(x)+" "+str(y)+"\n")
-				#print "DR Mean " +str(round(newdrmean,3))
-				#print "DR Median "+ str(round(newdrmedian,3))
-				#print "better schedule"
-				#print schedule
-				#print "\n\n"
+		
 				drmean=newdrmean
 				drmedian=newdrmedian
 				drout.write(str(round(newdrmedian,3))+"\n")
 			else:
-				# print "starting with"
-				# print schedule
-				# print "Swapped "+str(x)+" "+str(y)
-				# print tempschedule
-				# print "Not a better schedule"
-				# print "Reverting schedule to"
-				# print schedule
-				# print "\n\n"
-				1
 				drout.write(str(round(drmedian,3))+"\n")
 			
 	
@@ -255,11 +230,6 @@ def main():
 	bestdrout.write(str(count)+"\t"+str(round(drmedian,3))+"\n")
 				
 
-#Swapping 14 126
-#DR Mean 4.05397611394
-#DR Median 5.5756109202
-
-
 
 
 if __name__ == "__main__":
@@ -269,6 +239,8 @@ if __name__ == "__main__":
 	import json
 	from random import choice
 	from datetime import datetime
+	import time
+	import itertools
 	scorematrix=[]
 	session1=[]
 	session2=[]
@@ -283,4 +255,7 @@ if __name__ == "__main__":
 	intrasimlist=[]
 	intersimlist=[]
 	alldocs=[]
+	start_time = time.time()
 	main()
+	print time.time() - start_time, "seconds"
+
