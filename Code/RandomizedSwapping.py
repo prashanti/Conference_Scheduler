@@ -66,7 +66,7 @@ def sort(schedule):
 	return(sortedschedule)
 
 def randomizeschedulewithparameters(timeslots,sessions,talks):
-	alldocs1=range(1,325)
+	alldocs1=range(1,32)
 	newschedule=[]
 	for timeslot in range(1,timeslots+1):
 		newtimeslot=[]
@@ -81,7 +81,7 @@ def randomizeschedulewithparameters(timeslots,sessions,talks):
 	return(newschedule)			
 
 def randomizeschedule(schedule):
-	alldocs1=range(1,325)
+	alldocs1=range(1,32)
 	newschedule=[]
 	for timeslot in schedule:
 		newtimeslot=[]
@@ -103,7 +103,7 @@ def log_results(result):
 
 
 def worker(count,random,schedule,scorematrix,iterations):
-	alldocs=range(1,325)
+	alldocs=range(1,32)
 	intrasimlist=[]
 	intersimlist=[]
 	drdistribution=[]
@@ -178,11 +178,11 @@ def worker(count,random,schedule,scorematrix,iterations):
 			
 				drdistribution.append(round(drmedian,3))
 	print count,schedule
-	return(count,drdistribution,round(drmedian,3))
+	return(count,drdistribution,round(drmedian,3),schedule)
 				
 
 
-def writetofile(ofileloc,results):
+def writetofile1(ofileloc,results):
 	x = [a[1] for a in sorted(results,key=lambda x:x[0])]
 	rows = zip(*x)
 	ofile = open(ofileloc, 'w');
@@ -190,6 +190,25 @@ def writetofile(ofileloc,results):
 	for item in rows:
    		writer.writerow(item)
 	ofile.close()
+
+def writetofile(ofileloc,results):
+	x = [a[1] for a in sorted(results,key=lambda x:x[0])]
+	rows = zip(*x)
+	
+	ofile = open(ofileloc, 'w');
+	schedulefileloc="Schedule_"+ofileloc
+	schedulefile=open(schedulefileloc,'w')
+	writer = csv.writer(ofile,delimiter='\t',)
+	for item in rows:
+   		writer.writerow(item)
+   	for i in range(0,len(results)):
+   		resultstuple=results[i]
+   		schedulefile.write(str(resultstuple[0])+"\t"+str(resultstuple[2])+"\t")
+   		json.dump(resultstuple[3],schedulefile)
+   		schedulefile.write("\n")
+	ofile.close()
+	schedulefile.close()
+
 
 def main():
 	
