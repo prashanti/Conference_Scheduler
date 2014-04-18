@@ -127,11 +127,11 @@ def worker(count,randomflag,schedule,scorematrix,iterations):
 
 	
 	intersimlist,intrasimlist = calculate(schedule,scorematrix)
-	originalschedule = copy.deepcopy(schedule)
 	intramean=numpy.mean(intrasimlist)
 	intermean=numpy.mean(intersimlist)
 	drmean=intramean/intermean
-	bestsolution=round(drmean,3)	
+	bestsolution=round(drmean,3)
+	bestschedule=copy.deepcopy(schedule)	
 	drdistribution.append(round(drmean,3))
 
 
@@ -180,6 +180,7 @@ def worker(count,randomflag,schedule,scorematrix,iterations):
 				
 				if newdrmean>bestsolution:
 					bestsolution=round(newdrmean,3)
+					bestschedule=copy.deepcopy(tempschedule)
 				probability=calculateprobability(drmean,newdrmean,temperature)
 				
 				randomnumber=random.random()
@@ -197,7 +198,7 @@ def worker(count,randomflag,schedule,scorematrix,iterations):
 			break
 
 	print "Best Solution",count,bestsolution
-	return(count,drdistribution,bestsolution,schedule)
+	return(count,drdistribution,bestsolution,bestschedule)
 				
 
 def writetofile(ofileloc,results):
