@@ -7,7 +7,7 @@ def populateschedulefromfile():
 
 def populatetestschedule():
 	schedule=[]
-	alldocs=range(1,325)
+	alldocs=range(1,1034)
 	alldocs1=range(1,9)
 	session1=[[1,2],[3,4]]
 	session2=[[5,6],[7,8]]
@@ -65,8 +65,8 @@ def sort(schedule):
 		sortedschedule.append(sortedtimeslot)
 	return(sortedschedule)
 
-def randomflagizeschedulewithparameters(timeslots,sessions,talks):
-	alldocs1=range(1,325)
+def randomizeschedulewithparameters(timeslots,sessions,talks):
+	alldocs1=range(1,1034)
 	newschedule=[]
 	for timeslot in range(1,timeslots+1):
 		newtimeslot=[]
@@ -80,8 +80,8 @@ def randomflagizeschedulewithparameters(timeslots,sessions,talks):
 		newschedule.append(newtimeslot)
 	return(newschedule)			
 
-def randomflagizeschedule(schedule):
-	alldocs1=range(1,325)
+def randomizeschedule(schedule):
+	alldocs1=range(1,1034)
 	newschedule=[]
 	for timeslot in schedule:
 		newtimeslot=[]
@@ -118,12 +118,12 @@ def worker(count,randomflag,schedule,scorematrix,iterations):
 
 	cooling=kirkpatrick_cooling(50000,0.6)
 
-	alldocs=range(1,325)
+	alldocs=range(1,1034)
 	intrasimlist=[]
 	intersimlist=[]
 	drdistribution=[]
 	if randomflag == 1:
-		schedule=randomflagizeschedule(schedule)
+		schedule=randomizeschedule(schedule)
 
 	
 	intersimlist,intrasimlist = calculate(schedule,scorematrix)
@@ -131,16 +131,8 @@ def worker(count,randomflag,schedule,scorematrix,iterations):
 	intramean=numpy.mean(intrasimlist)
 	intermean=numpy.mean(intersimlist)
 	drmean=intramean/intermean
-	
-
-	intramedian=numpy.median(intrasimlist)
-	intermedian=numpy.median(intersimlist)
-	drmedian=intramedian/intermedian
-	bestsolution=drmedian
-	# print "Initial DR Mean " +str(drmean)
-	# print "Initial DR Median "+ str(drmedian)
-	
-	drdistribution.append(round(drmedian,3))
+	bestsolution=round(drmean,3)	
+	drdistribution.append(round(drmean,3))
 
 
 
@@ -184,14 +176,11 @@ def worker(count,randomflag,schedule,scorematrix,iterations):
 				newdrmean=intramean/intermean
 							
 
-				intramedian=numpy.median(intrasimlist)
-				intermedian=numpy.median(intersimlist)
-				newdrmedian=intramedian/intermedian
 				probability=0
 				
-				if newdrmedian>bestsolution:
-					bestsolution=newdrmedian
-				probability=calculateprobability(drmedian,newdrmedian,temperature)
+				if newdrmean>bestsolution:
+					bestsolution=round(newdrmean,3)
+				probability=calculateprobability(drmean,newdrmean,temperature)
 				
 				randomnumber=random.random()
 			
@@ -199,23 +188,37 @@ def worker(count,randomflag,schedule,scorematrix,iterations):
 				if randomnumber < probability:
 					schedule=copy.deepcopy(tempschedule)
 					drmean=newdrmean
-					drmedian=newdrmedian
-					
-					drdistribution.append(round(newdrmedian,3))
+					drdistribution.append(round(newdrmean,3))
 				else:
 					
-					drdistribution.append(round(drmedian,3))
+					drdistribution.append(round(drmean,3))
 				
 		else:
 			break
 
-	print "Best Solution",count,bestsolution		
-	return(count,drdistribution,round(drmedian,3))
+	print "Best Solution",count,bestsolution
+	return(count,drdistribution,bestsolution,schedule)
 				
 
-
-
 def writetofile(ofileloc,results):
+	x = [a[1] for a in sorted(results,key=lambda x:x[0])]
+	rows = zip(*x)
+	
+	ofile = open(ofileloc, 'w');
+	schedulefileloc="Schedule_"+ofileloc
+	schedulefile=open(schedulefileloc,'w')
+	writer = csv.writer(ofile,delimiter='\t',)
+	for item in rows:
+   		writer.writerow(item)
+   	for i in range(0,len(results)):
+   		resultstuple=results[i]
+   		schedulefile.write(str(resultstuple[0])+"\t"+str(resultstuple[2])+"\t")
+   		json.dump(resultstuple[3],schedulefile)
+   		schedulefile.write("\n")
+	ofile.close()
+	schedulefile.close()
+
+def writetofile1(ofileloc,results):
 	x = [a[1] for a in sorted(results,key=lambda x:x[0])]
 	rows = zip(*x)
 	ofile = open(ofileloc, 'w');
@@ -225,7 +228,7 @@ def writetofile(ofileloc,results):
 	ofile.close()
 
 def main():
-	#python randomflagizedSwapping-Parallel-SA.py TestSchedule.txt PairwiseSimilarity.tsv 2 5 0 randomflag_Results_SA_5.tsv > TestResults.txt
+	#python randomizedSwapping-Parallel-SA.py TestSchedule.txt PairwiseSimilarity.tsv 2 5 0 randomflag_Results_SA_5.tsv > TestResults.txt
 	print cpu_count()
 	runs=int(sys.argv[3])
 	iterations=int(sys.argv[4])
