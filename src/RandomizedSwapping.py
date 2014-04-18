@@ -113,16 +113,8 @@ def worker(count,random,schedule,scorematrix,iterations):
 	intersimlist,intrasimlist = calculate(schedule,scorematrix)
 	intramean=numpy.mean(intrasimlist)
 	intermean=numpy.mean(intersimlist)
-	drmean=intramean/intermean
-	
-
-	intramedian=numpy.median(intrasimlist)
-	intermedian=numpy.median(intersimlist)
-	drmedian=intramedian/intermedian
-	# print "Initial DR Mean " +str(drmean)
-	# print "Initial DR Median "+ str(drmedian)
-	
-	drdistribution.append(round(drmedian,3))
+	drmean=intramean/intermean	
+	drdistribution.append(round(drmean,3))
 
 
 	
@@ -160,25 +152,17 @@ def worker(count,random,schedule,scorematrix,iterations):
 			intramean=numpy.mean(intrasimlist)
 			intermean=numpy.mean(intersimlist)
 			newdrmean=intramean/intermean
-						
-
-			intramedian=numpy.median(intrasimlist)
-			intermedian=numpy.median(intersimlist)
-			newdrmedian=intramedian/intermedian
-			
-			if newdrmedian > drmedian:
+			if newdrmean > drmean:
 				
 				schedule=copy.deepcopy(tempschedule)
 			
 				drmean=newdrmean
-				drmedian=newdrmedian
-				
-				drdistribution.append(round(newdrmedian,3))
+				drdistribution.append(round(newdrmean,3))
 			else:
 			
-				drdistribution.append(round(drmedian,3))
+				drdistribution.append(round(drmean,3))
 	print count,schedule
-	return(count,drdistribution,round(drmedian,3),schedule)
+	return(count,drdistribution,round(drmean,3),schedule)
 				
 
 
