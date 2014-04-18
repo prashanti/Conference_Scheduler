@@ -7,7 +7,7 @@ from stemming.porter2 import stem
 import logging
 import os
 
-#logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 import numpy as np
 from gensim import corpora, models, similarities
 import sys
@@ -17,13 +17,44 @@ session1=[]
 allsessions=[]
 ################### Creating a set of stopwords
 stoplist=set()
-for line in open('stopwords.txt'):
+for line in open('../TestData/stopwords.txt'):
 	line=line.strip()
 	stoplist.add(line.lower())
 ###################
 
 
 
+def getkeywords():
+	#See here for more info: http://radimrehurek.com/gensim/tut2.html
+	count=1
+
+	# to get topics list for all 100 topics 
+	#lsi.print_topics(100)
+
+	writetopic=open("TopicWords_"+str(notopics)+".txt",'w')
+	for doc in corpus_lsi: 
+		
+		keywords=set()
+		doc.sort(key=lambda tup: tup[1], reverse=True)
+		#print "top1",doc[0][0] # this is the top topic for this document
+		#print "top2",doc[1][0] # this is the next best topic for this document
+		i=0
+		
+		count+=1
+		while (i<4): #4 top topics
+			topicscore=lsi.show_topic(doc[i][0], topn=4)
+			# top two words from each topic
+
+			keywords.add(stem2word[topicscore[0][1].strip()])
+			keywords.add(stem2word[topicscore[1][1].strip()])
+			keywords.add(stem2word[topicscore[2][1].strip()])
+			keywords.add(stem2word[topicscore[3][1].strip()])
+			i+=1
+
+		for word in keywords:
+			writetopic.write(word+",")
+		writetopic.write("\n")
+	
 
 inputfile=str(sys.argv[1])
 corpussize = sum(1 for line in open(inputfile))
@@ -35,6 +66,11 @@ Scorematrix = [[0 for x in xrange(corpussize)] for x in xrange(corpussize)]
 
 
 ################### 
+stem2word={}
+for line in open(inputfile):
+	for word in line.lower().split():
+		stemmed=stem(word).strip()
+		stem2word[stemmed]=word
 
 dictionary = corpora.Dictionary([[stem(word) for word in line.lower().split()] for line in open(inputfile)])
 stop_ids = [dictionary.token2id[stopword] for stopword in stoplist if stopword in dictionary.token2id]
@@ -79,6 +115,7 @@ class MyCorpus(object):
 corpus_memory_friendly = MyCorpus() 
 corpora.MmCorpus.serialize('./storedcorpus.mm', corpus_memory_friendly) 
 
+
 	###################
 
 
@@ -97,6 +134,7 @@ corpus_tfidf = tfidf[corpus]
 lsi = models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=notopics)
 corpus_lsi = lsi[corpus_tfidf]
 
+#lsi.print_debug(num_topics=5, num_words=10)
 ################## LSI 
 lsisimlist=[]
 index = similarities.MatrixSimilarity(corpus_lsi)
@@ -123,7 +161,7 @@ for row in range(0,corpussize):
 # NOTE: Scores are in the 2D array Scorematrix. To get the similarity score between document x and document y, access Scorematrix[x-1][y-1]
 
 
-		
+getkeywords()	
 
 
 
