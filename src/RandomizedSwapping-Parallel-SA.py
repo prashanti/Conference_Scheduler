@@ -108,16 +108,15 @@ def calculateprobability(prev_score,next_score,temperature):
         return math.exp( -abs(next_score-prev_score)/temperature )
 
 def kirkpatrick_cooling(start_temp,alpha):
-    T=start_temp
-    while True:
-        yield T
-        T=alpha*T
+	T=start_temp
+	while True:
+		yield T
+		T=alpha*T
 
 
-def worker(count,randomflag,schedule,scorematrix,iterations):
+def worker(count,randomflag,schedule,scorematrix,iterations,temperature,alpha):
 
-	cooling=kirkpatrick_cooling(50000,0.6)
-
+	cooling=kirkpatrick_cooling(temperature,alpha)
 	alldocs=range(1,1034)
 	intrasimlist=[]
 	intersimlist=[]
@@ -139,14 +138,10 @@ def worker(count,randomflag,schedule,scorematrix,iterations):
 	
 	better=0
 	for temperature in cooling:
-		
 		if better<iterations:
-
-			
 			tempschedule=copy.deepcopy(schedule)
 			x=choice(alldocs)
 			y=choice(alldocs)
-
 			for timeslot in schedule:
 				for session in timeslot:
 					if x in session:
@@ -166,6 +161,7 @@ def worker(count,randomflag,schedule,scorematrix,iterations):
 				1
 				
 			else:
+
 				better+=1
 				tempschedule[ytimeslotindex][ysessionindex][yindex],tempschedule[xtimeslotindex][xsessionindex][xindex] = tempschedule[xtimeslotindex][xsessionindex][xindex], tempschedule[ytimeslotindex][ysessionindex][yindex] 
 				
@@ -182,6 +178,7 @@ def worker(count,randomflag,schedule,scorematrix,iterations):
 					bestsolution=round(newdrmean,3)
 					bestschedule=copy.deepcopy(tempschedule)
 				probability=calculateprobability(drmean,newdrmean,temperature)
+
 				
 				randomnumber=random.random()
 			
@@ -194,10 +191,10 @@ def worker(count,randomflag,schedule,scorematrix,iterations):
 					
 					drdistribution.append(round(drmean,3))
 				
+				
 		else:
 			break
 
-	print "Best Solution",count,bestsolution
 	return(count,drdistribution,bestsolution,bestschedule)
 				
 
@@ -236,12 +233,15 @@ def main():
 	randomflag=int(sys.argv[5])
 	ofile=str(sys.argv[6])
 
+	temperature=int(sys.argv[7])
+	alpha=float(sys.argv[8])
+	print runs,iterations,randomflag,ofile,temperature,alpha
 	pool = Pool(processes=cpu_count())
 	schedule = populateschedulefromfile()
 	scorematrix = populatescorematrix()
 
 	for i in range(runs):
-		pool.apply_async(worker, args = (i,randomflag,schedule,scorematrix,iterations,), callback = log_results)
+		pool.apply_async(worker, args = (i,randomflag,schedule,scorematrix,iterations,temperature,alpha,), callback = log_results)
 	pool.close()
 	pool.join()
 	writetofile(ofile,results)
@@ -264,5 +264,5 @@ if __name__ == "__main__":
 	results=[]
 	start_time = time.time()
 	main()
-	print time.time() - start_time, "seconds"
+	print (time.time() - start_time)/60, "minutes"
 	
