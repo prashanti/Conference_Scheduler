@@ -113,6 +113,9 @@ def kirkpatrick_cooling(start_temp,alpha):
 		yield T
 		T=alpha*T
 
+def roundoff(number):
+	rounded=round(number,3)
+	return rounded
 
 def worker(count,randomflag,schedule,scorematrix,iterations,temperature,alpha):
 
@@ -128,10 +131,10 @@ def worker(count,randomflag,schedule,scorematrix,iterations,temperature,alpha):
 	intersimlist,intrasimlist = calculate(schedule,scorematrix)
 	intramean=numpy.mean(intrasimlist)
 	intermean=numpy.mean(intersimlist)
-	drmean=intramean/intermean
-	bestsolution=round(drmean,3)
+	drmean=roundoff(intramean/intermean)
+	bestsolution=drmean
 	bestschedule=copy.deepcopy(schedule)	
-	drdistribution.append(round(drmean,3))
+	drdistribution.append(drmean)
 
 
 
@@ -169,13 +172,13 @@ def worker(count,randomflag,schedule,scorematrix,iterations,temperature,alpha):
 
 				intramean=numpy.mean(intrasimlist)
 				intermean=numpy.mean(intersimlist)
-				newdrmean=intramean/intermean
+				newdrmean= roundoff(intramean/intermean)
 							
 
 				probability=0
 				
 				if newdrmean>bestsolution:
-					bestsolution=round(newdrmean,3)
+					bestsolution=newdrmean
 					bestschedule=copy.deepcopy(tempschedule)
 				probability=calculateprobability(drmean,newdrmean,temperature)
 
@@ -186,10 +189,10 @@ def worker(count,randomflag,schedule,scorematrix,iterations,temperature,alpha):
 				if randomnumber < probability:
 					schedule=copy.deepcopy(tempschedule)
 					drmean=newdrmean
-					drdistribution.append(round(newdrmean,3))
+					drdistribution.append(newdrmean)
 				else:
 					
-					drdistribution.append(round(drmean,3))
+					drdistribution.append(drmean)
 				
 				
 		else:
