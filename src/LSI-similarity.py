@@ -17,7 +17,7 @@ session1=[]
 allsessions=[]
 ################### Creating a set of stopwords
 stoplist=set()
-for line in open('../TestData/stopwords.txt'):
+for line in open('../Evolution2014Data/stopwords.txt'):
 	line=line.strip()
 	stoplist.add(line.lower())
 ###################
