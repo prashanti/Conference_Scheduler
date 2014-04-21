@@ -15,6 +15,16 @@ def populatetopics():
 		corpusID+=1
 	return corpusID2topics
 
+def populateabstractID2corpustextmap():
+	abstractID2corpustext={}
+	corpustext=open("../Evolution2014Data/Evolution2014-Corpus.txt")
+	corpusID=1
+	for line in corpustext:
+		abstractID2corpustext[corpusID]=line.strip()
+		corpusID+=1
+	return abstractID2corpustext
+
+
 def main():
 	date={}
 	starttime={}
@@ -25,14 +35,14 @@ def main():
 	numberoftalkspersession = int(sys.argv[3])+1
 	with open(schedulefile) as f:
 		schedule = json.load(f)
-	out=open("../Evolution2014Results/session_import.tsv",'w')
+	out=open("../Evolution2014Results/Schedule_xcd.tsv",'w')
 	abimport=open("../Evolution2014Results/abstract_import.tsv",'w')
-	conc=open("../Evolution2014Results/ConcurrentSchedules.xls",'w')
+	conc=open("../Evolution2014Results/ConcurrentSessions.tsv",'w')
 	room=open(roomfile,'r')
 	count=0
 	idmap=maptoabstractID()
 	
-	abimport.write("SessionID"	+"\t"+"SessionName"	+"\t"+"Orderof"	+"\t"+"AbTitle"	+"\t"+"AbStartTime"	+"\t"+"AbEndTime"	+"\t"+"AbID"	+"\t"+  "Top Words from Topics"+ "\t"+    "ProgramID"	+"\t"+"First1"	+"\t"+"Last1"+ "\t"+"Email1"	+"\t"+"Org1"+"\n")
+	abimport.write("SessionID"	+"\t"+"SessionName"	+"\t"+"Orderof"	+"\t"+"AbTitle"	+"\t"+"AbStartTime"	+"\t"+"AbEndTime"	+"\t"+"AbID"	+"\t"+  "Topic Words"+ "\t"+    "ProgramID"	+"\t"+"First1"	+"\t"+"Last1"+ "\t"+"Email1"	+"\t"+"Org1"+"\n")
 	for line in room:
 		data=line.split("\r")
 	for line in data:
@@ -64,7 +74,8 @@ def main():
 		conc.write("Timeslot_"+str(timeslotcount)+"\t")
 		timeslotcount+=1
 		for session in timeslot:
-			printdata="\t"+""+"\t"+""+"\t"+""+"\t"+""+"\t"+""+"\t"+""+"\t"+str(timeslotdate)+"\t"+str(timeslotstarttime)+"\t"+str(timeslotendtime)+"\t"+""+"\t"
+			#printdata="\t"+""+"\t"+""+"\t"+""+"\t"+""+"\t"+""+"\t"+""+"\t"+str(timeslotdate)+"\t"+str(timeslotstarttime)+"\t"+str(timeslotendtime)+"\t"+""+"\t"
+			printdata="\t"+""+"\t"+""+"\t"+""+"\t"+""+"\t"+""+"\t"+""+"\t"+" "+"\t"+" "+"\t"+" "+"\t"+""+"\t"
 			sessionindex=timeslot.index(session)
 			sessioncode=alphalist[sessionindex]
 			alphacode=""
@@ -79,6 +90,9 @@ def main():
 
 			out.write(printdata+"\n")
 		conc.write("\n")
+	conc.close()
+	out.close()
+
 	
 
 
@@ -115,11 +129,59 @@ def main():
 			org1=abstract[30].strip()
 			if abID in abstract2corpus:
 				topics=corpusID2topics[abstract2corpus[abID]]
-				#print abID,abstract2corpus[abID],topics
 			abimport.write(sessionID+"\t"+sessionname+"\t"+orderof+"\t"+abtitle+"\t"+abstarttime	+"\t"+abendtime+"\t"+str(abID)+"\t" +topics+"\t"   +programID+"\t"+first1	+"\t"+last1+"\t"+email1+"\t"+org1+"\n")
+
+
+	abstractID2corpustext=populateabstractID2corpustextmap()
+	inp=open("../Evolution2014Results/Schedule_xcd.tsv",'r')
+	maxtalkspersession=5
+	
+
+	sessionout=open("../Evolution2014Results/session_import.tsv",'w')
+	for line in inp:
+		if "Session Code" not in line:
+			idlist=""
+			out=open("../Evolution2014Data/SessionCorpus.txt",'w')
+			if "Session Code" not in line:
+				data=line.split("\t")
+				sessioncode=data[0].strip()
+				id1=11
+				maxid=id1+maxtalkspersession
+				currentid=id1
+				while currentid<maxid:
+					if len(data)>currentid:
+						idlist=idlist+","+str(data[currentid].strip())
+					currentid+=1
+				
+				for abID in idlist.split(","):
+					if (abID.strip() is not ''):
+						out.write(abstractID2corpustext[abstract2corpus[int(abID)]]+"\n")
+			out.close()
+			os.system('python LSI-similarity.py ../Evolution2014Data/SessionCorpus.txt 5')
+			topics=open("../Evolution2014Data/TopicWords_5.txt",'r')
+			topicset=set()
+			for topicline in topics:
+				data=topicline.split(",")
+				for topic in data:
+					if topic.strip() is not '':
+						topicset.add(topic.strip())
+			topicstring=""
+			for topic in topicset:
+				topicstring=topicstring+","+topic
+			topicstring = topicstring[1:-1]
+			sessionout.write(line.strip()+"\t"+topicstring+"\n")
+			topics.close()
+		else:
+			sessionout.write(line.strip()+"\t"+"Topic Words"+"\n")
+	sessionout.close()
+
+
+
 
 if __name__ == "__main__":
 	import json
 	import sys
 	import string
+	import os
+
 	main()
