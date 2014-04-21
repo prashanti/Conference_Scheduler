@@ -53,14 +53,7 @@ def randomizeschedule_variablesessions(timeslots,talkspersession,totalnumberofta
 					newsession,alldocs1=createrandomsession(talkspersession,alldocs1)
 					schedule[i].append(newsession)
 			else:
-				break
-	sum=0			
-	for timeslot in schedule:
-		print len(timeslot)
-		for session in timeslot:
-			print len(session)
-		print "\n\n"
-	print sum		
+				break		
 	return(schedule)
 def main():
 	
@@ -68,7 +61,7 @@ def main():
 	sessions=int(sys.argv[2])
 	talkspersession=int(sys.argv[3])
 	totalnumberoftalks=int(sys.argv[4])
-	outfile="RandomSchedule_"+str(timeslots)+"_"+str(sessions)+"_"+str(talkspersession)+".txt"
+	outfile="../Evolution2014Data/RandomSchedule_"+str(timeslots)+"_"+str(sessions)+"_"+str(talkspersession)+".txt"
 	print outfile
 	out=open(outfile,'w')
 	randomschedule=randomizeschedulewithparameters(timeslots,sessions,talkspersession,totalnumberoftalks)
