@@ -4,8 +4,8 @@ Automated_Conference_Scheduler
 Scheduling large conferences with several concurrent sessions manually is tedious and often results in sub-optimal schedules. Concurrent sessions need to be scheduled so as to maximize similarity of talks in the same session while minimizing overlap with talks in concurrent sessions. 
 
 This project can automatically create optimal schedules for large conferences with concurrent sessions. The titles and abstracts from the conference submissions are analyzed using Topic Modeling algorithms such as Latent Semantic Indexing (LSI)to identify similar submissions. LSI analyzes a body of text and identifies latent topics in the text. The similarity between two talks/submissions is computed based on the distribution of latent topics for the two talks. The project consists of two steps:
-	1. Computing pairwise talk similarity using LSI
-	2.   
+1. Computing pairwise talk similarity using LSI
+2.   
 
 
 
