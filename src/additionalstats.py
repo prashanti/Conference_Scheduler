@@ -26,7 +26,7 @@ def compareintersim(session1,session2,scorematrix):
 def computeaverageintersessionsim(schedule,scorematrix):
 	newschedule=[]
 	codes=[]
-	out=open('../Evolution2014Results/AverageInterSessionSimilarity.txt','w')
+	out=open('../Evolution2014Results/AdditionalStats/AverageInterSessionSimilarity.tsv','w')
 	
 	alphalist=list(string.ascii_lowercase)	
 	for timeslot in schedule:
@@ -62,6 +62,7 @@ def main():
 	schedulefile=sys.argv[1]
 	scorematrix=populatescorematrix()
 	abstractID2corpusID=populatecorpusID2abstractIDmapping()
+
 	with open(schedulefile) as f:
 		schedule = json.load(f)
 	computeaverageintersessionsim(schedule,scorematrix)
@@ -77,7 +78,12 @@ def main():
 			sessioncode=alphalist[sessionindex]
 			alphacode=timeslotcode+sessioncode
 			simmatrix=computesessionsessionsim(session,scorematrix)
-			out=open("../Evolution2014Results/SessionSimilarity/Session_"+str(alphacode)+ "_Similarity.txt",'w')
+			dir = os.path.dirname("../Evolution2014Results/AdditionalStats/SessionSimilarity/Session_"+str(alphacode)+ "_Similarity.tsv")
+			try:
+			    os.stat(dir)
+			except:
+				os.mkdir(dir)
+			out=open("../Evolution2014Results/AdditionalStats/SessionSimilarity/Session_"+str(alphacode)+ "_Similarity.tsv",'w')
 			out.write("Abstract ID"+"\t")
 			for talk in talkorder:
 				out.write(str(talk)+"\t")
@@ -109,4 +115,5 @@ if __name__ == "__main__":
 	import sys
 	import string
 	import numpy
+	import os
 	main()
