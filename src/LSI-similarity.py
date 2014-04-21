@@ -31,7 +31,7 @@ def getkeywords():
 	# to get topics list for all 100 topics 
 	#lsi.print_topics(100)
 
-	writetopic=open("TopicWords_"+str(notopics)+".txt",'w')
+	writetopic=open("../Evolution2014Data/TopicWords_"+str(notopics)+".txt",'w')
 	for doc in corpus_lsi: 
 		
 		keywords=set()
