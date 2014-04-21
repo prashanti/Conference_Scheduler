@@ -131,8 +131,11 @@ corpus = corpora.MmCorpus('./storedcorpus.mm')
 tfidf = models.TfidfModel(corpus) # step 1 -- initialize a model
 corpus_tfidf = tfidf[corpus]
 
+
 lsi = models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=notopics)
 corpus_lsi = lsi[corpus_tfidf]
+#lsi = models.LsiModel(corpus, id2word=dictionary, num_topics=notopics)
+#corpus_lsi = lsi[corpus]
 
 #lsi.print_debug(num_topics=5, num_words=10)
 ################## LSI 
