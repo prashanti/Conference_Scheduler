@@ -104,6 +104,55 @@ def main():
 		specialsymposia2sessioncode[data[1].strip()]=data[0].strip()
 	
 	abstract2corpus = {v:k for k, v in idmap.items()}
+
+
+
+	abstractID2corpustext=populateabstractID2corpustextmap()
+	inp=open("../Evolution2014Results/Schedule_xcd.tsv",'r')
+	maxtalkspersession=5
+	
+	sessioncode2topics={}
+	sessionout=open("../Evolution2014Results/session_import.tsv",'w')
+	for line in inp:
+		if "Session Code" not in line:
+			idlist=""
+			out=open("../Evolution2014Data/SessionCorpus.txt",'w')
+		
+			data=line.split("\t")
+			sessioncode=data[0].strip()
+			id1=11
+			maxid=id1+maxtalkspersession
+			currentid=id1
+			while currentid<maxid:
+				if len(data)>currentid:
+					idlist=idlist+","+str(data[currentid].strip())
+				currentid+=1
+			
+			for abID in idlist.split(","):
+				if (abID.strip() is not ''):
+					out.write(abstractID2corpustext[abstract2corpus[int(abID)]]+"\n")
+			out.close()
+			os.system('python LSI-similarity.py ../Evolution2014Data/SessionCorpus.txt 5')
+			topics=open("../Evolution2014Data/TopicWords_5.txt",'r')
+			topicset=set()
+			for topicline in topics:
+				data=topicline.split(",")
+				for topic in data:
+					if topic.strip() is not '':
+						topicset.add(topic.strip())
+			topicstring=""
+			for topic in topicset:
+				topicstring=topicstring+","+topic
+			topicstring = topicstring[1:-1]
+			sessioncode2topics[sessioncode.strip()]=topicstring
+
+			sessionout.write(line.strip()+"\t"+topicstring+"\n")
+			topics.close()
+		else:
+			sessionout.write(line.strip()+"\t"+"Topic Words"+"\n")
+	sessionout.close()
+	
+
 	abimport.write("AbstractID"+"\t"+ "Proposed Session"+ "\t" + "Author LastName" +"\t" + "Author FirstName" + "\t" + "Title" + "\t"+ "Abstract" + "Keywords"+ "\n")
 	
 
@@ -124,53 +173,13 @@ def main():
 			first1=" "
 			last1=" "
 			abstract=abstract[3].strip()
-			if abID in abstract2corpus:
-				topics=corpusID2topics[abstract2corpus[abID]]
+			topics=""
+			if sessionID in sessioncode2topics:
+				topics=sessioncode2topics[sessionID]
+			else:
+				print sessionID
+				1
 			abimport.write(str(abID)+"\t"+ sessionID+"\t"+last1+"\t"+first1+"\t"+abtitle+"\t"+abstract	+"\t"+topics+"\n")
-
-
-	abstractID2corpustext=populateabstractID2corpustextmap()
-	inp=open("../Evolution2014Results/Schedule_xcd.tsv",'r')
-	maxtalkspersession=5
-	
-
-	sessionout=open("../Evolution2014Results/session_import.tsv",'w')
-	for line in inp:
-		if "Session Code" not in line:
-			idlist=""
-			out=open("../Evolution2014Data/SessionCorpus.txt",'w')
-			if "Session Code" not in line:
-				data=line.split("\t")
-				sessioncode=data[0].strip()
-				id1=11
-				maxid=id1+maxtalkspersession
-				currentid=id1
-				while currentid<maxid:
-					if len(data)>currentid:
-						idlist=idlist+","+str(data[currentid].strip())
-					currentid+=1
-				
-				for abID in idlist.split(","):
-					if (abID.strip() is not ''):
-						out.write(abstractID2corpustext[abstract2corpus[int(abID)]]+"\n")
-			out.close()
-			os.system('python LSI-similarity.py ../Evolution2014Data/SessionCorpus.txt 5')
-			topics=open("../Evolution2014Data/TopicWords_5.txt",'r')
-			topicset=set()
-			for topicline in topics:
-				data=topicline.split(",")
-				for topic in data:
-					if topic.strip() is not '':
-						topicset.add(topic.strip())
-			topicstring=""
-			for topic in topicset:
-				topicstring=topicstring+","+topic
-			topicstring = topicstring[1:-1]
-			sessionout.write(line.strip()+"\t"+topicstring+"\n")
-			topics.close()
-		else:
-			sessionout.write(line.strip()+"\t"+"Topic Words"+"\n")
-	sessionout.close()
 
 
 
