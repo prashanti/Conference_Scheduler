@@ -42,7 +42,6 @@ def main():
 	count=0
 	idmap=maptoabstractID()
 	
-	abimport.write("SessionID"	+"\t"+"SessionName"	+"\t"+"Orderof"	+"\t"+"AbTitle"	+"\t"+"AbStartTime"	+"\t"+"AbEndTime"	+"\t"+"AbID"	+"\t"+  "Topic Words"+ "\t"+    "ProgramID"	+"\t"+"First1"	+"\t"+"Last1"+ "\t"+"Email1"	+"\t"+"Org1"+"\n")
 	for line in room:
 		data=line.split("\r")
 	for line in data:
@@ -103,7 +102,10 @@ def main():
 	for line in special:
 		data=line.split("\t")
 		specialsymposia2sessioncode[data[1].strip()]=data[0].strip()
+	
 	abstract2corpus = {v:k for k, v in idmap.items()}
+	abimport.write("AbstractID"+"\t"+ "Proposed Session"+ "\t" + "Author LastName" +"\t" + "Author FirstName" + "\t" + "Title" + "\t"+ "Abstract" + "Keywords"+ "\n")
+	
 
 	for line in abstracts:
 		if "Presentation Type" not in line:
@@ -117,19 +119,14 @@ def main():
 					sessionID="Not Provided"
 				else:
 					sessionID=specialsymposia2sessioncode[abstract[7].strip()]
-			sessionname=" " 
-			orderof=" "
+			
 			abtitle=abstract[2].strip()
-			abstarttime=" "
-			abendtime=" "
-			programID=" "
-			first1=abstract[25].strip()
-			last1=abstract[26].strip()
-			email1=abstract[28].strip()
-			org1=abstract[30].strip()
+			first1=" "
+			last1=" "
+			abstract=abstract[3].strip()
 			if abID in abstract2corpus:
 				topics=corpusID2topics[abstract2corpus[abID]]
-			abimport.write(sessionID+"\t"+sessionname+"\t"+orderof+"\t"+abtitle+"\t"+abstarttime	+"\t"+abendtime+"\t"+str(abID)+"\t" +topics+"\t"   +programID+"\t"+first1	+"\t"+last1+"\t"+email1+"\t"+org1+"\n")
+			abimport.write(str(abID)+"\t"+ sessionID+"\t"+last1+"\t"+first1+"\t"+abtitle+"\t"+abstract	+"\t"+topics+"\n")
 
 
 	abstractID2corpustext=populateabstractID2corpustextmap()
