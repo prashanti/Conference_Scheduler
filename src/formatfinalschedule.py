@@ -110,7 +110,7 @@ def main():
 	abstractID2corpustext=populateabstractID2corpustextmap()
 	inp=open("../Evolution2014Results/Schedule_xcd.tsv",'r')
 	maxtalkspersession=5
-	
+	masterkeywordset=set()
 	sessioncode2topics={}
 	sessionout=open("../Evolution2014Results/session_import.tsv",'w')
 	for line in inp:
@@ -142,8 +142,9 @@ def main():
 						topicset.add(topic.strip())
 			topicstring=""
 			for topic in topicset:
+				masterkeywordset.add(topic.strip())
 				topicstring=topicstring+","+topic
-			topicstring = topicstring[1:-1]
+			topicstring = topicstring[1:]
 			sessioncode2topics[sessioncode.strip()]=topicstring
 
 			sessionout.write(line.strip()+"\t"+topicstring+"\n")
@@ -181,7 +182,10 @@ def main():
 				1
 			abimport.write(str(abID)+"\t"+ sessionID+"\t"+last1+"\t"+first1+"\t"+abtitle+"\t"+abstract	+"\t"+topics+"\n")
 
-
+	keywordlist=open("../Evolution2014Results/Keyword_List.xls",'w')
+	for keyword in masterkeywordset:
+		keywordlist.write(keyword+"\n")
+	keywordlist.close()
 
 
 if __name__ == "__main__":
