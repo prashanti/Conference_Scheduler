@@ -23,26 +23,39 @@ def main():
 
 
 
-	constraints=[]
-	temp_dict={}
-	i=0
+	constraints={}
+	temp_list=[]
+	i=1
 	
 	# Ernst Mayr award constraint - cannot be in last day
-	while (i<1548):
-		temp_dict={}
-		for session in sessioncodes:
-			if i in awardabstracts:
-				if (session in timeslot_sessions[15]) or (session in timeslot_sessions[14]) or (session in timeslot_sessions[13]) or (session in timeslot_sessions[12]):
-					temp_dict[session]=0
 
+	for session in sessioncodes:
+		
+		i=1
+		while (i<=1548):
+			if i in awardabstracts: # this is an award abstract
+				if (session in timeslot_sessions[15]) or (session in timeslot_sessions[14]) or (session in timeslot_sessions[13]) or (session in timeslot_sessions[12]): # session is not safe for award abstract, do nothing
+					1
+
+				else: # session is safe for award abstract
+					if session in constraints:
+						constraints[session].append(i)
+					else:
+						constraints[session]=[]
+						constraints[session].append(i)
+
+			else: # this is not an awards abstract, can schedule it in all sessions
+				if session in constraints:
+					constraints[session].append(i)
 				else:
-					temp_dict[session]=1
-			else:
-				temp_dict[session]=1
-		constraints.append(temp_dict)
-		i+=1
+					constraints[session]=[]
+					constraints[session].append(i)
+			i+=1
+		print session,len(constraints[session])			
+
+
+
 	constraintsfile=open("../Evolution2014Data/ConstraintMatrix.txt",'w')
-	print constraints
 	json.dump(constraints,constraintsfile)
 	constraintsfile.close()
 
