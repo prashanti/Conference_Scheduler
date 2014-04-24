@@ -1,6 +1,15 @@
+
+def populateabstractIDs():
+	abstractIDs=[]
+	abstracts=open("../Evolution2014Data/AbstractIDlist.txt",'r')
+	for line in abstracts:
+		abstractIDs.append(int(line.strip()))
+	return(abstractIDs)
+
 def main():
 	awardfile=sys.argv[1]
 	award=open(awardfile,'r')
+	abstractIDs=populateabstractIDs()
 	awardabstracts=[]
 	sessioncodes=[]
 	for line in award:
@@ -30,9 +39,7 @@ def main():
 	# Ernst Mayr award constraint - cannot be in last day
 
 	for session in sessioncodes:
-		
-		i=1
-		while (i<=1548):
+		for i in abstractIDs:
 			if i in awardabstracts: # this is an award abstract
 				if (session in timeslot_sessions[15]) or (session in timeslot_sessions[14]) or (session in timeslot_sessions[13]) or (session in timeslot_sessions[12]): # session is not safe for award abstract, do nothing
 					1
@@ -50,7 +57,6 @@ def main():
 				else:
 					constraints[session]=[]
 					constraints[session].append(i)
-			i+=1
 		print session,len(constraints[session])			
 
 
