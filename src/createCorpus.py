@@ -18,8 +18,13 @@ def main():
 		presentationtype=line.split("\t")[1]
 		award=line.split("\t")[5].strip()
 		abstractID=line.split("\t")[0].strip()
-		if "considered" in award:
+		sseaward=line.split("\t")[4].strip()
+		print sseaward
+		if "considered" in award or "Yes" in sseaward:
+
 			awardfile.write(abstractID+"\n")
+	
+
 
 		if presentationtype.strip() == "Contributed Presentation":
 
