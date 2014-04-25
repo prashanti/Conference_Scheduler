@@ -16,8 +16,6 @@ def main():
 		awardabstracts.append(int(line.strip()))
 	award.close()
 
-
-
 	sessions=open("../Evolution2014Results/ConcurrentSessions.tsv",'r')
 	timeslot_sessions=[]
 	for line in sessions:
@@ -38,27 +36,32 @@ def main():
 	
 	# Ernst Mayr award constraint - cannot be in last day
 
+
 	for session in sessioncodes:
 		for i in abstractIDs:
+
 			if i in awardabstracts: # this is an award abstract
+				
 				if (session in timeslot_sessions[15]) or (session in timeslot_sessions[14]) or (session in timeslot_sessions[13]) or (session in timeslot_sessions[12]): # session is not safe for award abstract, do nothing
 					1
 
 				else: # session is safe for award abstract
-					if session in constraints:
-						constraints[session].append(i)
+					if i in constraints:
+						constraints[int(i)].append(session)
 					else:
-						constraints[session]=[]
-						constraints[session].append(i)
+						constraints[int(i)]=[]
+						constraints[int(i)].append(session)
 
 			else: # this is not an awards abstract, can schedule it in all sessions
-				if session in constraints:
-					constraints[session].append(i)
+				
+				if i in constraints:
+					constraints[int(i)].append(session)
 				else:
-					constraints[session]=[]
-					constraints[session].append(i)
-		print session,len(constraints[session])			
-
+					constraints[int(i)]=[]
+					constraints[int(i)].append(session)
+					
+	for abstract in constraints:
+		print abstract,len(constraints[abstract])
 
 
 	constraintsfile=open("../Evolution2014Data/ConstraintMatrix.txt",'w')
@@ -70,4 +73,5 @@ def main():
 if __name__ == "__main__":
 	import sys
 	import json
+	from operator import itemgetter
 	main()
