@@ -57,13 +57,22 @@ def populatescorematrix():
 	return scorematrix
 
 def initializeschedule(timeslots):
-	maxsession=[14,14,14,14,14,14,14,14,14,14,14,14,10,10,10,10]
+	maxsession=[14,14,14,14,14,14,14,14,14,14,14,13,10,10,10,10]
 	schedule=[]
 	for time in xrange(0,timeslots):
 		schedule.append([])
 		for sess in xrange(0,maxsession[time]):
 			schedule[time].append([])
 	return(schedule)
+
+def maptocorpusID():
+	#CorpusID	AbstractID
+	reverseidmap={}
+	mapping=open("../Evolution2014Data/AbstractID2CorpusID.tsv","r")
+	for line in mapping:
+		if "AbstractID" not in line:
+			reverseidmap[int(line.split("\t")[1].strip())]=int(line.split("\t")[0].strip())
+	return(reverseidmap)
 
 def maptoabstractID():
 	#CorpusID	AbstractID
@@ -74,12 +83,19 @@ def maptoabstractID():
 			idmap[int(line.split("\t")[0].strip())]=int(line.split("\t")[1].strip())
 	return(idmap)
 
-def randomizeschedule_variablesessions(timeslots,talkspersession,totalnumberoftalks,constraintmatrix):
-	abstractIDs=populateabstractIDs()
-	
-	
-	schedule=initializeschedule(timeslots)
+def populateabstractIDs():
+	abstractIDs=[]
+	abstracts=open("../Evolution2014Data/AbstractIDlist.txt",'r')
+	for line in abstracts:
+		abstractIDs.append(int(line.strip()))
+	return(abstractIDs)
 
+def randomizeschedule_variablesessions(timeslots,talkspersession,totalnumberoftalks,constraintmatrix):
+
+	abstractIDs=populateabstractIDs()
+
+	schedule=initializeschedule(timeslots)
+	
 	fullsessionlist=set()
 	alphalist=list(string.ascii_lowercase)
 	
@@ -95,7 +111,17 @@ def randomizeschedule_variablesessions(timeslots,talkspersession,totalnumberofta
 		schedule[timeslotcode-1][sessioncode-1].append(int(abstract))
 		if len(schedule[timeslotcode-1][sessioncode-1])==talkspersession:
 			fullsessionlist.add(randomsession)
+	print "here"
+	schedule=converttoCorpusID(schedule)
+	return(schedule)
 
+def converttoCorpusID(schedule):
+	reverseidmap=maptocorpusID()
+	for timeslot in schedule:
+		for session in timeslot:
+			for talk in session:
+				CorpusID=reverseidmap[talk]
+				schedule[schedule.index(timeslot)][timeslot.index(session)][session.index(talk)]=CorpusID
 	return(schedule)
 
 def sort(schedule):
@@ -127,10 +153,14 @@ def worker(count,random,schedule,scorematrix,iterations,timeslots,talkspersessio
 	intersimlist=[]
 	drdistribution=[]
 	idmap=maptoabstractID()
-	if random is '1':
+	print "Run",random
+	if random == 1:
 		schedule=randomizeschedule_variablesessions(timeslots,talkspersession,totalnumberoftalks,constraintmatrix)
+
 	corpusID2sessioncode= mapcorpusID2sessioncode(schedule)	
+
 	intersimlist,intrasimlist = calculate(schedule,scorematrix)
+
 	intramean=numpy.mean(intrasimlist)
 	intermean=numpy.mean(intersimlist)
 	drmean=intramean/intermean	
@@ -247,18 +277,9 @@ def main():
 	timeslots=int(sys.argv[7])
 	talkspersession=int(sys.argv[8])
 	totalnumberoftalks=int(sys.argv[9])
-
 	pool = Pool(processes=cpu_count())
 	schedule = populateschedulefromfile()
 	scorematrix = populatescorematrix()
-
-
-
-
-
-
-
-
 	for i in range(runs):
 		pool.apply_async(worker, args = (i,random,schedule,scorematrix,iterations,timeslots,talkspersession,totalnumberoftalks), callback = log_results)
 	pool.close()
