@@ -326,7 +326,7 @@ def main():
 	schedule = populateschedulefromfile()
 	scorematrix = populatescorematrix()
 	for i in range(runs):
-		pool.apply_async(worker, args = (i,randomflag,schedule,scorematrix,iterations,timeslots,talkspersession,totalnumberoftalks,temperature,alpha), callback = log_results)
+		pool.apply_async(worker, args = (i,randomflag,schedule,scorematrix,iterations,timeslots,talkspersession,totalnumberoftalks,temperature,alpha,), callback = log_results)
 	pool.close()
 	pool.join()
 	writetofile(ofile,results)
