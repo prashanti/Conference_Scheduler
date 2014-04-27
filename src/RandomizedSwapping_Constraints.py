@@ -169,7 +169,7 @@ def worker(count,random,schedule,scorematrix,iterations,timeslots,talkspersessio
 	intermean=numpy.mean(intersimlist)
 	drmean= roundoff(intramean/intermean)	
 	drdistribution.append(drmean)
-	alldocs=range(1,1034)
+	alldocs=range(1,totalnumberoftalks+1)
 
 	
 	better=0
