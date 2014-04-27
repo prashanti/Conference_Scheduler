@@ -65,8 +65,8 @@ def sort(schedule):
 		sortedschedule.append(sortedtimeslot)
 	return(sortedschedule)
 
-def randomizeschedulewithparameters(timeslots,sessions,talks):
-	alldocs1=range(1,1034)
+def randomizeschedulewithparameters(timeslots,sessions,talks,totalnumberoftalks):
+	alldocs1=range(1,totalnumberoftalks+1)
 	newschedule=[]
 	for timeslot in range(1,timeslots+1):
 		newtimeslot=[]
@@ -80,8 +80,8 @@ def randomizeschedulewithparameters(timeslots,sessions,talks):
 		newschedule.append(newtimeslot)
 	return(newschedule)			
 
-def randomizeschedule(schedule):
-	alldocs1=range(1,1034)
+def randomizeschedule(schedule,totalnumberoftalks):
+	alldocs1=range(1,totalnumberoftalks+1)
 	newschedule=[]
 	for timeslot in schedule:
 		newtimeslot=[]
@@ -117,15 +117,15 @@ def roundoff(number):
 	rounded=round(number,3)
 	return rounded
 
-def worker(count,randomflag,schedule,scorematrix,iterations,temperature,alpha):
+def worker(count,randomflag,schedule,scorematrix,iterations,timeslots,talkspersession,totalnumberoftalks,temperature,alpha):
 
 	cooling=kirkpatrick_cooling(temperature,alpha)
-	alldocs=range(1,1034)
+	alldocs=range(1,totalnumberoftalks+1)
 	intrasimlist=[]
 	intersimlist=[]
 	drdistribution=[]
 	if randomflag == 1:
-		schedule=randomizeschedule(schedule)
+		schedule=randomizeschedule(schedule,totalnumberoftalks)
 
 	
 	intersimlist,intrasimlist = calculate(schedule,scorematrix)
@@ -219,14 +219,7 @@ def writetofile(ofileloc,results):
 	ofile.close()
 	schedulefile.close()
 
-def writetofile1(ofileloc,results):
-	x = [a[1] for a in sorted(results,key=lambda x:x[0])]
-	rows = zip(*x)
-	ofile = open(ofileloc, 'w');
-	writer = csv.writer(ofile,delimiter='\t',)
-	for item in rows:
-   		writer.writerow(item)
-	ofile.close()
+
 
 def main():
 	#python randomizedSwapping-Parallel-SA.py TestSchedule.txt PairwiseSimilarity.tsv 2 5 0 randomflag_Results_SA_5.tsv > TestResults.txt
@@ -235,16 +228,19 @@ def main():
 	iterations=int(sys.argv[4])
 	randomflag=int(sys.argv[5])
 	ofile=str(sys.argv[6])
+	timeslots=int(sys.argv[7])
+	talkspersession=int(sys.argv[8])
+	totalnumberoftalks=int(sys.argv[9])
+	temperature=int(sys.argv[10])
+	alpha=float(sys.argv[11])
 
-	temperature=int(sys.argv[7])
-	alpha=float(sys.argv[8])
 	print runs,iterations,randomflag,ofile,temperature,alpha
 	pool = Pool(processes=cpu_count())
 	schedule = populateschedulefromfile()
 	scorematrix = populatescorematrix()
 
 	for i in range(runs):
-		pool.apply_async(worker, args = (i,randomflag,schedule,scorematrix,iterations,temperature,alpha,), callback = log_results)
+		pool.apply_async(worker, args = (i,randomflag,schedule,scorematrix,iterations,timeslots,talkspersession,totalnumberoftalks,temperature,alpha,), callback = log_results)
 	pool.close()
 	pool.join()
 	writetofile(ofile,results)
