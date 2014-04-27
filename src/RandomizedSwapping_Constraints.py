@@ -14,6 +14,10 @@ def populatetestschedule():
 	schedule.append(session1)
 	schedule.append(session2)
 
+def roundoff(number):
+	rounded=round(number,3)
+	return rounded
+
 def calculateintrasimilarity(timeslot, intrasimlist,scorematrix):
 	for session in timeslot:
 		for i in range (0, len(session)):
@@ -163,8 +167,8 @@ def worker(count,random,schedule,scorematrix,iterations,timeslots,talkspersessio
 
 	intramean=numpy.mean(intrasimlist)
 	intermean=numpy.mean(intersimlist)
-	drmean=intramean/intermean	
-	drdistribution.append(round(drmean,3))
+	drmean= roundoff(intramean/intermean)	
+	drdistribution.append(drmean)
 	alldocs=range(1,1034)
 
 	
@@ -216,18 +220,18 @@ def worker(count,random,schedule,scorematrix,iterations,timeslots,talkspersessio
 
 				intramean=numpy.mean(intrasimlist)
 				intermean=numpy.mean(intersimlist)
-				newdrmean=intramean/intermean
+				newdrmean=roundoff(intramean/intermean)
 				if newdrmean > drmean:
 					
 					schedule=copy.deepcopy(tempschedule)
 				
 					drmean=newdrmean
-					drdistribution.append(round(newdrmean,3))
+					drdistribution.append(newdrmean)
 				else:
 				
-					drdistribution.append(round(drmean,3))
+					drdistribution.append(drmean)
 	
-	return(count,drdistribution,round(drmean,3),schedule)
+	return(count,drdistribution,drmean,schedule)
 				
 def mapcorpusID2sessioncode(schedule):
 	alphalist=list(string.ascii_lowercase)
