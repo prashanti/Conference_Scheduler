@@ -65,8 +65,8 @@ def sort(schedule):
 		sortedschedule.append(sortedtimeslot)
 	return(sortedschedule)
 
-def randomizeschedulewithparameters(timeslots,sessions,talks):
-	alldocs1=range(1,32)
+def randomizeschedulewithparameters(timeslots,sessions,talks,totalnumberoftalks):
+	alldocs1=range(1,totalnumberoftalks+1)
 	newschedule=[]
 	for timeslot in range(1,timeslots+1):
 		newtimeslot=[]
@@ -80,8 +80,8 @@ def randomizeschedulewithparameters(timeslots,sessions,talks):
 		newschedule.append(newtimeslot)
 	return(newschedule)			
 
-def randomizeschedule(schedule):
-	alldocs1=range(1,32)
+def randomizeschedule(schedule,totalnumberoftalks):
+	alldocs1=range(1,totalnumberoftalks+1)
 	newschedule=[]
 	for timeslot in schedule:
 		newtimeslot=[]
@@ -101,20 +101,23 @@ def randomizeschedule(schedule):
 def log_results(result):
 	results.append(result)
 
+def roundoff(number):
+	rounded=round(number,3)
+	return rounded
 
-def worker(count,random,schedule,scorematrix,iterations):
-	alldocs=range(1,32)
+def worker(count,random,schedule,scorematrix,iterations,totalnumberoftalks):
+	alldocs=range(1,totalnumberoftalks+1)
 	intrasimlist=[]
 	intersimlist=[]
 	drdistribution=[]
 	if random is '1':
-		schedule=randomizeschedule(schedule)
+		schedule=randomizeschedule(schedule,totalnumberoftalks)
 		
 	intersimlist,intrasimlist = calculate(schedule,scorematrix)
 	intramean=numpy.mean(intrasimlist)
 	intermean=numpy.mean(intersimlist)
-	drmean=intramean/intermean	
-	drdistribution.append(round(drmean,3))
+	drmean=roundoff(intramean/intermean)	
+	drdistribution.append(drmean)
 
 
 	
@@ -151,18 +154,18 @@ def worker(count,random,schedule,scorematrix,iterations):
 
 			intramean=numpy.mean(intrasimlist)
 			intermean=numpy.mean(intersimlist)
-			newdrmean=intramean/intermean
+			newdrmean=roundoff(intramean/intermean)
 			if newdrmean > drmean:
 				
 				schedule=copy.deepcopy(tempschedule)
 			
 				drmean=newdrmean
-				drdistribution.append(round(newdrmean,3))
+				drdistribution.append(newdrmean)
 			else:
 			
-				drdistribution.append(round(drmean,3))
+				drdistribution.append(drmean)
 	print count,schedule
-	return(count,drdistribution,round(drmean,3),schedule)
+	return(count,drdistribution,drmean,schedule)
 				
 
 
@@ -201,13 +204,14 @@ def main():
 	iterations=int(sys.argv[4])
 	random=int(sys.argv[5])
 	ofile=str(sys.argv[6])
+	totalnumberoftalks=int(sys.argv[7])
 
 	pool = Pool(processes=cpu_count())
 	schedule = populateschedulefromfile()
 	scorematrix = populatescorematrix()
 
 	for i in range(runs):
-		pool.apply_async(worker, args = (i,random,schedule,scorematrix,iterations,), callback = log_results)
+		pool.apply_async(worker, args = (i,random,schedule,scorematrix,iterations,totalnumberoftalks,), callback = log_results)
 	pool.close()
 	pool.join()
 	writetofile(ofile,results)
