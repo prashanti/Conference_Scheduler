@@ -17,7 +17,7 @@ def populateabstractIDs():
 
 
 def initializeschedule(timeslots):
-	maxsession=[14,14,14,14,14,14,14,14,14,14,14,14,10,10,10,10]
+	maxsession=[14,14,14,14,14,14,14,14,14,14,14,13,10,10,10,10]
 	schedule=[]
 	for time in xrange(0,timeslots):
 		schedule.append([])
@@ -68,15 +68,16 @@ def randomizeschedule_variablesessions(timeslots,talkspersession,totalnumberofta
 			sess+=1
 		i+=1
 
+	schedule=converttoCorpusID(schedule)
+	return(schedule)
+def converttoCorpusID(schedule):
 	idmap=maptocorpusID()
 	for timeslot in schedule:
 		for session in timeslot:
 			for talk in session:
 				CorpusID=idmap[talk]
 				schedule[schedule.index(timeslot)][timeslot.index(session)][session.index(talk)]=CorpusID
-				print CorpusID
 	return(schedule)
-
 def main():
 	timeslots=int(sys.argv[1])
 	talkspersession=int(sys.argv[2])
